@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "485221616875",
+    "project_id": "smartalarm-19ca5"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485221616875:android:8ad05e0d8062d470",
+        "android_client_info": {
+          "package_name": "xavi.smartalarm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485221616875-jqvfjj4vrq5os1l98h8i3dij080o5bto.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "xavi.smartalarm",
+            "certificate_hash": "50689d9a82c5c281ed67d5b910f2b14c216ae35c"
+          }
+        },
+        {
+          "client_id": "485221616875-hbgd2jo8ne603ls1ndogv5ii1n3bm9pa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_ybbIZMf12zuxR_OALNk-3rVJs7jes9w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
