@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private GoogleApiClient mGoogleApiClient;
     private final int RC_SIGN_IN = 9001;
+    private final int RC_APP = 9090;
     private static final String TAG = "SignInActivity";
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //register the authentication button
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
-        //findViewById(R.id.disconnect_button).setOnClickListener(this);
+        findViewById(R.id.disconnect_button).setOnClickListener(this);
 
         mStatusTextView = (TextView) findViewById(R.id.status);
 
@@ -105,9 +106,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             case R.id.sign_out_button:
                 signOut();
                 break;
-           /* case R.id.disconnect_button:
+            case R.id.disconnect_button:
                 revokeAccess();
-                break;*/
+                break;
         }
     }
 
@@ -126,7 +127,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         // [END_EXCLUDE]
                     }
                 });
+
     }
+
+    private void revokeAccess() {
+        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        // [START_EXCLUDE]
+                        updateUI(false);
+                        // [END_EXCLUDE]
+                    }
+                });
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -136,6 +151,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
+            if(result.isSuccess()){
+                startApp();
+            }
+        }
+        // Result returned from activity, using sign out button.
+        if (requestCode == RC_APP){
+            Log.d(TAG, "ESTic al requestcode rc_app");
         }
     }
 
@@ -150,6 +172,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             // Signed out, show unauthenticated UI.
             updateUI(false);
         }
+    }
+
+    /**
+     * This method is called when the user is signed in correctly.
+     * Start the next activity.
+     */
+    private void startApp() {
+        Intent intent = new Intent(this,AppMainPage.class);
+        startActivityForResult(intent,RC_APP);
     }
 
     private void updateUI(boolean signedIn) {

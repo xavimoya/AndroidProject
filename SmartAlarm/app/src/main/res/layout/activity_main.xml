@@ -61,7 +61,7 @@
             android:text="@string/sign_out"
             android:theme="@style/ThemeOverlay.MyDarkButton" />
 
-       <!--
+
         <Button
             android:id="@+id/disconnect_button"
             android:layout_width="0dp"
@@ -69,7 +69,7 @@
             android:layout_weight="1"
             android:text="@string/disconnect"
             android:theme="@style/ThemeOverlay.MyDarkButton" />
-            -->
+
     </LinearLayout>
 
 </RelativeLayout>
