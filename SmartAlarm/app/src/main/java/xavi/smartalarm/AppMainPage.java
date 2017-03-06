@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 /**
- * Created by Xavi on 4/3/17.
+ * Created by Xavi and Reylin on 4/3/17.
  *
  */
 
