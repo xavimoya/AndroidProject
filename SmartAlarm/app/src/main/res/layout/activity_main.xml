@@ -10,6 +10,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="xavi.smartalarm.MainActivity">
 
+
+
     <TextView
         android:id="@+id/title_text"
         android:layout_width="wrap_content"
@@ -25,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/signed_out"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/background_dark"
         android:textSize="14sp" />
 
 
@@ -40,7 +42,7 @@
 
 
     <LinearLayout
-        android:id="@+id/sign_out_and_disconnect"
+        android:id="@+id/sign_out_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -62,14 +64,8 @@
             android:theme="@style/ThemeOverlay.MyDarkButton" />
 
 
-        <Button
-            android:id="@+id/disconnect_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/disconnect"
-            android:theme="@style/ThemeOverlay.MyDarkButton" />
-
     </LinearLayout>
+
+
 
 </RelativeLayout>

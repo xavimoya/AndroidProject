@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_Newalarm"
+            android:icon="@android:drawable/ic_popup_reminder"
+            android:title="New alarm" />
+        <item
+            android:id="@+id/nav_Editalarm"
+            android:icon="@android:drawable/ic_popup_reminder"
+            android:title="Edit alarms" />
+    </group>
+
+    <item android:title="Options">
+        <menu>
+            <item
+                android:id="@+id/nav_manage"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Tools" />
+            <item
+                android:id="@+id/nav_signout"
+                android:icon="@android:drawable/ic_menu_revert"
+                android:title="Disconnect" />
+        </menu>
+    </item>
+
+</menu>

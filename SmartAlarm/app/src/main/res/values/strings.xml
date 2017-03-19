@@ -10,7 +10,10 @@
 
     <!-- Buttons -->
     <string name="sign_out">Sign Out</string>
+    <string name="sign_in">Sign In</string>
     <string name="disconnect">Disconnect</string>
     <string name="exitApp">Exit</string>
+    <string name="email_notsigned">mail@gmail.com</string>
+    <string name="name_notSigned">Name Surname</string>
 
 </resources>

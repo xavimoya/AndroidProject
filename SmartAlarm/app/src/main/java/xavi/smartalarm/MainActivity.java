@@ -2,11 +2,23 @@ package xavi.smartalarm;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
@@ -20,30 +32,55 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 /**
  * Created by Xavi and Reylin on 4/3/17.
  *
  */
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener,
+        NavigationView.OnNavigationItemSelectedListener{
 
     private GoogleApiClient mGoogleApiClient;
     private final int RC_SIGN_IN = 9001;
-    private final int RC_APP = 9090;
     private static final String TAG = "SignInActivity";
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
+    private ImageView imageView;
+    private TextView name, email;
+    private DrawerLayout drawer;
+    private Menu menu;
+    private Drawable imageD;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+      //  setContentView(R.layout.activity_main);
+        setContentView(R.layout.drawerlayout);
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //get Menu
+        menu = navigationView.getMenu();
+
 
         //register the authentication button
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
-        findViewById(R.id.disconnect_button).setOnClickListener(this);
+
+        //get the items of navigationView
+        imageView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.head_imageView);
+        name = (TextView) navigationView.getHeaderView(0).findViewById(R.id.head_name);
+        email = (TextView) navigationView.getHeaderView(0).findViewById(R.id.head_email);
+        imageD = imageView.getDrawable();
+
 
         mStatusTextView = (TextView) findViewById(R.id.status);
 
@@ -110,9 +147,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             case R.id.sign_out_button:
                 signOut();
                 break;
-            case R.id.disconnect_button:
-                revokeAccess();
-                break;
         }
     }
 
@@ -134,17 +168,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
-    private void revokeAccess() {
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        updateUI(false);
-                        // [END_EXCLUDE]
-                    }
-                });
-    }
 
 
     @Override
@@ -155,13 +178,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
-            if(result.isSuccess()){
-                startApp();
-            }
-        }
-        // Result returned from activity, using sign out button.
-        if (requestCode == RC_APP){
-            Log.d(TAG, "ESTic al requestcode rc_app");
         }
     }
 
@@ -170,7 +186,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
+            mStatusTextView.setText(acct.getDisplayName());
+
+            name.setText(acct.getDisplayName());
+            email.setText(acct.getEmail());
+            //imageView.setImageURI(acct.getPhotoUrl());
+            DownloadIMG Dimg = new DownloadIMG();
+            Dimg.execute(acct.getPhotoUrl().toString());
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
@@ -182,20 +204,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
      * This method is called when the user is signed in correctly.
      * Start the next activity.
      */
-    private void startApp() {
-        Intent intent = new Intent(this,AppMainPage.class);
-        startActivityForResult(intent,RC_APP);
-    }
 
     private void updateUI(boolean signedIn) {
+        MenuItem item =  menu.findItem(R.id.nav_signout);
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
-        } else {
+            findViewById(R.id.sign_out_layout).setVisibility(View.VISIBLE);
+            item.setTitle(getString(R.string.sign_out));
+        } else { // signed out
             mStatusTextView.setText((R.string.signed_out));
 
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
+            findViewById(R.id.sign_out_layout).setVisibility(View.GONE);
+            item.setTitle(getString(R.string.sign_in));
+
+            name.setText(R.string.name_notSigned);
+            email.setText(R.string.email_notsigned);
+            imageView.setImageDrawable(imageD);
         }
     }
 
@@ -212,6 +237,70 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void hideProgressDialog() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.hide();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_Newalarm) {
+
+        } else if(id == R.id.nav_Editalarm){
+
+        } else if (id == R.id.nav_signout) {
+            if(item.getTitle() == getString(R.string.sign_out)) signOut();
+            else if(item.getTitle() == getString(R.string.sign_in)) signIn();
+        } else if (id == R.id.nav_manage) {
+
+        }
+
+        drawer.closeDrawer(GravityCompat.START);
+        return true;    }
+
+    @Override
+    public void onRestart(){
+        super.onRestart();
+
+
+    }
+
+    private class DownloadIMG extends AsyncTask<String, Void, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            String path = params[0];
+            return DownloadImageFromPath(path);
+
+        }
+
+        public Bitmap DownloadImageFromPath(String path) {
+            InputStream in = null;
+            Bitmap bmp = null;
+            int responseCode = -1;
+            try {
+
+                URL url = new URL(path);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setDoInput(true);
+                con.connect();
+                responseCode = con.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    //download
+                    in = con.getInputStream();
+                    bmp = BitmapFactory.decodeStream(in);
+                    in.close();
+                }
+
+            } catch (Exception ex) {
+                Log.e("Exception", ex.toString());
+            }
+            return bmp;
+        }
+
+        @Override
+        public void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
         }
     }
 }
