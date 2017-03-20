@@ -15,5 +15,12 @@
     <string name="exitApp">Exit</string>
     <string name="email_notsigned">mail@gmail.com</string>
     <string name="name_notSigned">Sign in to show the profile</string>
+    <string name="add_alarm">Add alarm</string>
+    <string name="button_set">Set</string>
+
+    <!-- Labels -->
+    <string name="label_title">Title</string>
+    <string name="label_description">Description</string>
+    <string name="label_location">Location</string>
 
 </resources>
