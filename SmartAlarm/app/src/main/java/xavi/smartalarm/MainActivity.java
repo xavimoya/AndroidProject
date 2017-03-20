@@ -210,6 +210,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             findViewById(R.id.sign_out_layout).setVisibility(View.VISIBLE);
             item.setTitle(getString(R.string.sign_out));
             item.setIcon(android.R.drawable.ic_menu_revert);
+            menu.setGroupVisible(R.id.groupAlarmMenu,true);
+
         } else { // signed out
             mStatusTextView.setText((R.string.signed_out));
 
@@ -220,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             name.setText(R.string.name_notSigned);
             email.setText("");
             imageView.setImageDrawable(imageD);
+            menu.setGroupVisible(R.id.groupAlarmMenu,false);
         }
     }
 
