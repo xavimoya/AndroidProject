@@ -14,6 +14,6 @@
     <string name="disconnect">Disconnect</string>
     <string name="exitApp">Exit</string>
     <string name="email_notsigned">mail@gmail.com</string>
-    <string name="name_notSigned">Name Surname</string>
+    <string name="name_notSigned">Sign in to show the profile</string>
 
 </resources>
