@@ -6,7 +6,8 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "xavi.smartalarm"
-        minSdkVersion 15
+        minSdkVersion 21
+        //minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -29,6 +30,7 @@ dependencies {
     compile 'com.android.support:support-v4:25.2.0'
     compile 'com.android.support:design:25.2.0'
     compile 'com.google.android.gms:play-services-auth:9.0.0'
+    compile 'com.google.android.gms:play-services-location:9.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     compile 'com.android.support:cardview-v7:25.2.0'
     compile 'de.hdodenhof:circleimageview:1.3.0'

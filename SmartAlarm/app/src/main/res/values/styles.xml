@@ -27,4 +27,21 @@
     <item name="android:textColor">@android:color/white</item>
 </style>
 
+
+        <!-- Base application theme. -->
+        <style name="AppTheme3" parent="Theme.AppCompat.Light.DarkActionBar">
+
+            <!-- Customize your theme here. -->
+            <item name="colorPrimary">@color/colorGreen1</item>
+            <item name="colorPrimaryDark">@color/colorGreen3</item>
+        </style>
+
+        <style name="SmartAlarmTheme" parent="AppTheme" >
+            <item name="colorPrimary">@color/colorGreen1</item>
+            <item name="colorPrimaryDark">@color/colorGreen2</item>
+        </style>
+
+        <style name="Theme.Material.Light.NoActionBar.NoActionBar" parent="android:Theme.Material.NoActionBar" />
+
+
 </resources>

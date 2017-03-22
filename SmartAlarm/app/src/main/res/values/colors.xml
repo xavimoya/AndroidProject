@@ -10,4 +10,13 @@
         <color name="blue_grey_700">#455A64</color>
         <color name="blue_grey_800">#37474F</color>
         <color name="blue_grey_900">#263238</color>
+
+    <color name="colorDark">#00213a</color>
+
+    <!-- GREEN -->
+    <color name="colorGreen1">#003d26</color>
+    <color name="colorGreen2">#004b4a</color>
+    <color name="colorBlue1">#3789a7</color>
+    <color name="colorBlue2">#298bd3</color>
+    <color name="colorGreen3">#001a10</color>
 </resources>

@@ -1,5 +1,6 @@
 package xavi.smartalarm;
 
+import android.app.AlarmManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,9 +15,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
@@ -33,6 +38,8 @@ import com.google.android.gms.common.api.Status;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by Xavi and Reylin on 4/3/17.
@@ -45,13 +52,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private GoogleApiClient mGoogleApiClient;
     private final int RC_SIGN_IN = 9001;
     private static final String TAG = "SignInActivity";
-    private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
     private ImageView imageView;
     private TextView name, email;
     private DrawerLayout drawer;
     private Menu menu;
     private Drawable imageD;
+    private static final int RESULT_ADDALARM = 100;
+    ListView listView;
+    ArrayList<Alarm> alarms;
+    ArrayAdapter<Alarm> adapterAlarm;
+    AlarmManager alarmManager;
+    Switch alarmSwitch;
 
 
     @Override
@@ -59,6 +71,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onCreate(savedInstanceState);
       //  setContentView(R.layout.activity_main);
         setContentView(R.layout.drawerlayout);
+
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        alarms = new ArrayList<Alarm>();
+        listView = (ListView) findViewById(R.id.listView_alarms);
+        adapterAlarm = new CustomAlarmAdapter(this, alarms);
+        listView.setAdapter(adapterAlarm);
+
+
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -71,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         //register the authentication button
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
 
         //get the items of navigationView
         imageView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.head_imageView);
@@ -80,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         imageD = imageView.getDrawable();
 
 
-        mStatusTextView = (TextView) findViewById(R.id.status);
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -142,9 +163,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             case R.id.sign_in_button:
                 signIn();
                 break;
-            case R.id.sign_out_button:
-                signOut();
-                break;
+
         }
     }
 
@@ -177,6 +196,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
+        //Result returned of create alarm
+        else if(requestCode == resultCode && resultCode == RESULT_ADDALARM){
+            //Result of AddAlarm
+            //data is the new alarm configured
+            Calendar date = Calendar.getInstance();
+
+            //year, month, day, hour, minute
+
+            date.set(data.getIntExtra("Year",0),
+                    data.getIntExtra("Month",0),
+                    data.getIntExtra("Day",0),
+                    data.getIntExtra("Hour",0),
+                    data.getIntExtra("Minute",0));
+
+            Alarm alarm = new Alarm(date,data.getExtras().getString("Title"), "Barcelona");
+
+            alarms.add(alarm);
+
+            adapterAlarm.notifyDataSetChanged(); //Notify that the listview has another element
+        }
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
@@ -184,7 +223,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            mStatusTextView.setText(acct.getDisplayName());
 
             name.setText(acct.getDisplayName());
             email.setText(acct.getEmail());
@@ -205,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void updateUI(boolean signedIn) {
         MenuItem item =  menu.findItem(R.id.nav_signout);
+
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.sign_out_layout).setVisibility(View.VISIBLE);
@@ -213,7 +252,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             menu.setGroupVisible(R.id.groupAlarmMenu,true);
 
         } else { // signed out
-            mStatusTextView.setText((R.string.signed_out));
 
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_out_layout).setVisibility(View.GONE);
@@ -223,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             email.setText("");
             imageView.setImageDrawable(imageD);
             menu.setGroupVisible(R.id.groupAlarmMenu,false);
+
         }
     }
 
@@ -247,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         int id = item.getItemId();
 
         if (id == R.id.nav_Newalarm) {
-
+            newAlarm();
         } else if(id == R.id.nav_Editalarm){
 
         } else if (id == R.id.nav_signout) {
@@ -304,5 +343,44 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         public void onPostExecute(Bitmap result) {
             imageView.setImageBitmap(result);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_addalarm, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.addButton:
+                newAlarm();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void newAlarm() {
+        Intent intentTime = new Intent(MainActivity.this, AddAlarm.class);
+        intentTime.addFlags(intentTime.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivityForResult(intentTime,RESULT_ADDALARM);
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    private void setAlarm(Alarm alarm){
+
     }
 }
