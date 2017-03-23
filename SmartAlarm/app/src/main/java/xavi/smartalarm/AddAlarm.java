@@ -16,39 +16,38 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 /**
- * Created by Reylin on 13/03/2017.
+ * Created by Xavi and Reylin on 13/03/2017.
  */
 
 public class AddAlarm extends AppCompatActivity {
 
     private static final int RESULT_ADDALARM = 100;
 
+    private static final int RESULT_LOCATION = 101;
 
     private TimePicker timePicker;
     private TextView title;
-    private Button button_save, button_date;
+    private Button button_save, button_date, button_location;
 
-    private TimePickerDialog timePickerDialog;
     private DatePickerDialog datePickerDialog;
 
-    private int iday,imonth,iyear;
+    private int iday, imonth, iyear;
     private final Calendar c = Calendar.getInstance();
-    
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addalarm);
 
-        iyear= c.get(Calendar.YEAR); // current year
-        imonth= c.get(Calendar.MONTH) +1; // current month (starts on 0)
+        iyear = c.get(Calendar.YEAR); // current year
+        imonth = c.get(Calendar.MONTH) + 1; // current month (starts on 0)
         iday = c.get(Calendar.DAY_OF_MONTH); // current day
 
         /*Time*/
-        timePicker = (TimePicker)findViewById(R.id.timePicker);
-        title = (EditText)findViewById(R.id.textView_title);
-        button_save = (Button)findViewById(R.id.button_set);
+        timePicker = (TimePicker) findViewById(R.id.timePicker);
+        title = (EditText) findViewById(R.id.textView_title);
+        button_save = (Button) findViewById(R.id.button_set);
 
         timePicker.setIs24HourView(true);
 
@@ -58,12 +57,13 @@ public class AddAlarm extends AppCompatActivity {
             public void onClick(View v) {
 
                 //Check if exist necessary data
-                TextView tvDate = (TextView)findViewById(R.id.dateAlarm);
-                EditText etTitle = (EditText)findViewById(R.id.textView_title);
+                TextView tvDate = (TextView) findViewById(R.id.dateAlarm);
+                EditText etTitle = (EditText) findViewById(R.id.textView_title);
+                TextView tvLocation = (TextView)findViewById(R.id.locationAlarm);
                 //check Date - check Title - check location (in process) - the time not necessary check, time now by default.
-                if(tvDate.getText().toString().isEmpty() || etTitle.getText().toString().isEmpty()){
-                    Toast.makeText(AddAlarm.this,"You don't choose all necessary data", Toast.LENGTH_SHORT).show();
-                }else {
+                if (tvDate.getText().toString().isEmpty() || etTitle.getText().toString().isEmpty() || tvLocation.toString().isEmpty()) {
+                    Toast.makeText(AddAlarm.this, "You don't choose all necessary data", Toast.LENGTH_SHORT).show();
+                } else {
 
                     Intent intent = new Intent();
                     intent.putExtra("Hour", timePicker.getHour());
@@ -72,6 +72,7 @@ public class AddAlarm extends AppCompatActivity {
                     intent.putExtra("Day", iday);
                     intent.putExtra("Month", imonth);
                     intent.putExtra("Year", iyear);
+                    intent.putExtra("Location",tvLocation.getText().toString());
                     setResult(RESULT_ADDALARM, intent);
                     finish();
                 }
@@ -97,10 +98,10 @@ public class AddAlarm extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                monthOfYear = monthOfYear +1;
+                                monthOfYear = monthOfYear + 1;
 
-                              TextView tvDate = (TextView) findViewById(R.id.dateAlarm);
-                                tvDate.setText(dayOfMonth +"/"+monthOfYear +"/"+year);
+                                TextView tvDate = (TextView) findViewById(R.id.dateAlarm);
+                                tvDate.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
                                 iday = dayOfMonth;
                                 imonth = monthOfYear;
                                 iyear = year;
@@ -109,6 +110,29 @@ public class AddAlarm extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
-        /*------------------------------------------------------------------------------*/
+
+        //Location
+        button_location = (Button) findViewById(R.id.button_location);
+        button_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(AddAlarm.this, MapsActivity.class);
+                startActivityForResult(i, RESULT_LOCATION);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == resultCode && resultCode == RESULT_LOCATION) {
+            String location = data.getExtras().getString("Location");
+            String street = data.getExtras().getString("Street");
+            TextView tv = (TextView)findViewById(R.id.locationAlarm);
+            if(location==null)location="";
+            if(street==null)street="";
+            tv.setText(location + ", " + street);
+        }
     }
 }

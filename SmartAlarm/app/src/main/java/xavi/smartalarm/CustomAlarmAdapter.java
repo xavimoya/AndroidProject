@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Created by Reylin on 14/03/2017.
+ * Created by Xavi and Reylin on 14/03/2017.
  */
 
 class CustomAlarmAdapter extends ArrayAdapter<Alarm>{
@@ -29,11 +29,15 @@ class CustomAlarmAdapter extends ArrayAdapter<Alarm>{
         TextView alarmTextView = (TextView) customView.findViewById(R.id.text_title);
         TextView time = (TextView) customView.findViewById(R.id.text_time);
         TextView date = (TextView) customView.findViewById(R.id.text_date);
+        TextView location = (TextView) customView.findViewById(R.id.text_location);
+
 
 
         alarmTextView.setText(alarm.getTitle());
         time.setText(alarm.getDate().get(Calendar.HOUR_OF_DAY) + ":" + alarm.getDate().get(Calendar.MINUTE));
         date.setText(alarm.getDate().get(Calendar.DAY_OF_MONTH) +"/" + alarm.getDate().get(Calendar.MONTH) + "/" + alarm.getDate().get(Calendar.YEAR));
+        location.setText(alarm.getDestiny());
+
 
         return customView;
     }

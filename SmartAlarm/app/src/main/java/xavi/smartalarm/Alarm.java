@@ -3,7 +3,7 @@ package xavi.smartalarm;
 import java.util.Calendar;
 
 /**
- * Created by Reylin on 14/03/2017.
+ * Created by Xavi and Reylin on 14/03/2017.
  */
 
 public class Alarm {

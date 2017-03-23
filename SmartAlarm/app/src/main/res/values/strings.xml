@@ -26,6 +26,9 @@
     <string name="button_date">Date</string>
     <string name="dd_mm_yyyy">DD/MM/YYYY</string>
     <string name="hh_mm">HH:MM</string>
+    <string name="set_your_location">Set your location</string>
+    <string name="error_location">Permission revoked. Cannot access to location.</string>
+    <string name="location_notfound">The input location not found, try another.</string>
 
     <!-- API KEY -->
 

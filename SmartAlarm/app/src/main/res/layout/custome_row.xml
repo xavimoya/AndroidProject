@@ -5,19 +5,10 @@
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:focusableInTouchMode="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorGreen1">
 
-    <TextView
-        android:id="@+id/text_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="14dp"
-        android:layout_marginStart="14dp"
-        android:ems="10"
-        android:textColor="@color/colorBlue1"
-        android:layout_below="@+id/switch1"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+
 
     <TextView
         android:id="@+id/text_title"
@@ -27,16 +18,39 @@
         android:textColor="#FFFFFF"
         android:layout_alignBaseline="@+id/switch1"
         android:layout_alignBottom="@+id/switch1"
-        android:layout_alignLeft="@+id/text_time"
         android:layout_alignStart="@+id/text_time" />
+
+    <TextView
+        android:id="@+id/text_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textColor="#FFFFFF"
+        android:layout_alignBaseline="@+id/switch1"
+        android:layout_alignTop="@+id/text_title"
+        android:layout_toEndOf="@+id/text_title" />
 
     <TextView
         android:id="@+id/text_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorBlue1"
-        android:layout_alignTop="@+id/text_time"
-        android:layout_toEndOf="@+id/text_time" />
+        android:textColor="@color/colorBlue2"
+        android:layout_below="@id/text_title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/text_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp"
+        android:ems="10"
+        android:textColor="@color/colorBlue2"
+        android:layout_below="@+id/switch1"
+        android:layout_alignTop="@+id/text_date"
+        android:layout_toEndOf="@+id/text_date"
+        />
 
     <Switch
         android:id="@+id/switch1"

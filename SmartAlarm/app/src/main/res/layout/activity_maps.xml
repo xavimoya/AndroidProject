@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"
+    android:background="@color/colorGreen1">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+
+        <EditText
+            android:id="@+id/TFaddress"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter your destiny"
+            android:text=""
+            android:textColor="#FFF"
+            android:textColorHint="#a4a4a4" />
+
+        <LinearLayout
+            android:id="@+id/layoutButtons1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/TFaddress"
+
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/Bsearch"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:onClick="onSearch"
+                android:text="Search" />
+
+            <Button
+                android:id="@+id/Btype"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:nestedScrollingEnabled="false"
+                android:onClick="changeType"
+                android:text="Map Type" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutButtons2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/Bzoomin"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onZoom"
+                android:text="+" />
+
+            <Button
+                android:id="@+id/Bzoomout"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onZoom"
+                android:text="-" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/ButtonSave"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/TFaddress"
+            android:text="Save Location"
+            android:onClick="onSaveLocation"
+            />
+
+    </RelativeLayout>
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:id="@+id/map" tools:context=".MapsActivity"
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+</LinearLayout>
+</LinearLayout>

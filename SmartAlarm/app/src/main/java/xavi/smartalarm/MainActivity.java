@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     data.getIntExtra("Hour",0),
                     data.getIntExtra("Minute",0));
 
-            Alarm alarm = new Alarm(date,data.getExtras().getString("Title"), "Barcelona");
+            Alarm alarm = new Alarm(date,data.getExtras().getString("Title"), data.getExtras().getString("Location"));
 
             alarms.add(alarm);
 
