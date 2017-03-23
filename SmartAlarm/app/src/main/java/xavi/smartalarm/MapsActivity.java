@@ -70,7 +70,7 @@ public class MapsActivity extends FragmentActivity {
                 e.printStackTrace();
                 Toast.makeText(MapsActivity.this, R.string.location_notfound,Toast.LENGTH_SHORT).show();
             }
-            if (addressList != null) {
+            if (addressList != null && addressList.size()==1) {
                 Address address = addressList.get(0);
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 mMap.clear();

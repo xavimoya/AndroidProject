@@ -1,12 +1,17 @@
 package xavi.smartalarm;
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -63,7 +68,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     ArrayList<Alarm> alarms;
     ArrayAdapter<Alarm> adapterAlarm;
     AlarmManager alarmManager;
-    Switch alarmSwitch;
+    MediaPlayer player;
+    private MenuItem i,i2;
+
+
 
 
     @Override
@@ -215,6 +223,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             alarms.add(alarm);
 
             adapterAlarm.notifyDataSetChanged(); //Notify that the listview has another element
+            startAlarm(true); //Valor del switch
+
         }
     }
 
@@ -243,13 +253,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void updateUI(boolean signedIn) {
         MenuItem item =  menu.findItem(R.id.nav_signout);
-
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.sign_out_layout).setVisibility(View.VISIBLE);
             item.setTitle(getString(R.string.sign_out));
             item.setIcon(android.R.drawable.ic_menu_revert);
             menu.setGroupVisible(R.id.groupAlarmMenu,true);
+            if(i!=null)i.setVisible(true);
 
         } else { // signed out
 
@@ -261,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             email.setText("");
             imageView.setImageDrawable(imageD);
             menu.setGroupVisible(R.id.groupAlarmMenu,false);
+            if(i!=null)i.setVisible(false);
 
         }
     }
@@ -315,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         }
 
-        public Bitmap DownloadImageFromPath(String path) {
+        private Bitmap DownloadImageFromPath(String path) {
             InputStream in = null;
             Bitmap bmp = null;
             int responseCode = -1;
@@ -349,6 +360,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_addalarm, menu);
+        i = menu.findItem(R.id.addButton);
+        i2 = menu.findItem(R.id.pauseButton);
         return true;
     }
 
@@ -358,15 +371,40 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         switch (item.getItemId()) {
             case R.id.addButton:
                 newAlarm();
-            default:
-                return super.onOptionsItemSelected(item);
+                break;
+            case R.id.pauseButton:
+                player.stop();
+                if(i2!=null)i2.setVisible(false);
+                break;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void newAlarm() {
         Intent intentTime = new Intent(MainActivity.this, AddAlarm.class);
-        intentTime.addFlags(intentTime.FLAG_ACTIVITY_CLEAR_TOP);
         startActivityForResult(intentTime,RESULT_ADDALARM);
+    }
+
+    private void startAlarm(boolean state) {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent;
+        PendingIntent pendingIntent;
+
+        //Represents the switch is true, this indicates that the alarm is activated
+        // We need more info in this method to set the alarm al normal time (the alarm)
+        if (state) { //true
+            intent = new Intent(MainActivity.this, AlarmNotification.class);
+            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+            //Active the Alarm, NOW active it 3 seconds after tou save the alarm
+            manager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime() + 3000, pendingIntent);
+
+            /*Set the alarm sound*/
+            player = MediaPlayer.create(this, R.raw.closer);
+            player.start();
+            if(i2!=null)i2.setVisible(true);
+
+        }
     }
 
 
