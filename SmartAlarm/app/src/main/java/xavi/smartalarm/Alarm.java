@@ -47,10 +47,14 @@ public class Alarm {
     public void setHour(int hour){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date.getTime());
-        System.out.println("AQUI -------------------- first + " + cal.getTime().toString());
         cal.set(Calendar.HOUR_OF_DAY, hour);
-        System.out.println("AQUI -------------------- second + " + cal.getTime().toString());
+        this.date.setTime(cal.getTime());
+    }
 
+    public void setMinute(int minute){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date.getTime());
+        cal.set(Calendar.MINUTE, minute);
         this.date.setTime(cal.getTime());
     }
 

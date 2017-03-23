@@ -94,9 +94,10 @@ public class WeatherPrevisionAPI extends AsyncTask<String, Void, String> {
     }
 
     private void editAlarm(){
-        //set to 3 to test
-        alarm.setHour(3);
-        MainActivity.date = alarm.getDate();
+        //set alarm to 3:20 to test
+       // alarm.setHour(3);
+       // alarm.setMinute(20);
+        MainActivity.createAlarm(alarm);
     }
 
 }

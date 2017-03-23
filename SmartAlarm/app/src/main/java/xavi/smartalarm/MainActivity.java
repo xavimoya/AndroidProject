@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     MediaPlayer player;
     private MenuItem i,i2;
 
-    public Calendar date;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         else if(requestCode == resultCode && resultCode == RESULT_ADDALARM){
             //Result of AddAlarm
             //data is the new alarm configured
-            date = Calendar.getInstance();
+            Calendar date = Calendar.getInstance();
 
             //year, month, day, hour, minute
 
@@ -235,13 +235,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             alarm.setDate(date);
 
             //Add alarm after check weather prevision
-            alarms.add(alarm);
+        /*    alarms.add(alarm);
 
             adapterAlarm.notifyDataSetChanged(); //Notify that the listview has changes
 
             //Prueba valor switch
 
-
+*/
             //Tendriamos que usar el switch
             startAlarm(true); //Valor del switch
 
@@ -417,15 +417,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             intent = new Intent(MainActivity.this, AlarmNotification.class);
             pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
-            //Active the Alarm, NOW active it 3 seconds after tou save the alarm
+            //Notification of alarm, NOW active it 3 seconds after tou save the alarm
             manager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime() + 3000, pendingIntent);
 
             /*Set the alarm sound*/
             player = MediaPlayer.create(this, R.raw.closer);
+            //Start the alarm - play
             player.start();
             if(i2!=null)i2.setVisible(true);
 
         }
+    }
+
+
+    public void createAlarm(Alarm alarm){
+        //Add alarm after check weather prevision
+        alarms.add(alarm);
+
+        adapterAlarm.notifyDataSetChanged(); //Notify that the listview has changes
     }
 
 
