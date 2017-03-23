@@ -31,6 +31,10 @@
     <string name="location_notfound">The input location not found, try another.</string>
 
     <!-- API KEY -->
+    <!-- api key openwheatherMap-->
+    <string name="weatherAPIkey">56ea67b66ab8d74fb18f0958284c324b</string>
+    <string name="urlAPIweather"><![CDATA[http://samples.openweathermap.org/data/2.5/forecast?lat=%2$f&lon=%2$f&appid=]]></string>
+    <string name="problemsSaveLocation">Some problem to save the location.</string>
 
 
 </resources>

@@ -1,6 +1,7 @@
 package xavi.smartalarm;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Xavi and Reylin on 14/03/2017.
@@ -42,5 +43,16 @@ public class Alarm {
     public void setDestiny(String destiny) {
         this.destiny = destiny;
     }
+
+    public void setHour(int hour){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date.getTime());
+        System.out.println("AQUI -------------------- first + " + cal.getTime().toString());
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        System.out.println("AQUI -------------------- second + " + cal.getTime().toString());
+
+        this.date.setTime(cal.getTime());
+    }
+
 
 }

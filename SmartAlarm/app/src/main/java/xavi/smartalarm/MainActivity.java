@@ -71,14 +71,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     MediaPlayer player;
     private MenuItem i,i2;
 
-
-
+    public Calendar date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
       //  setContentView(R.layout.activity_main);
         setContentView(R.layout.drawerlayout);
+
 
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         else if(requestCode == resultCode && resultCode == RESULT_ADDALARM){
             //Result of AddAlarm
             //data is the new alarm configured
-            Calendar date = Calendar.getInstance();
+            date = Calendar.getInstance();
 
             //year, month, day, hour, minute
 
@@ -220,10 +220,31 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
             Alarm alarm = new Alarm(date,data.getExtras().getString("Title"), data.getExtras().getString("Location"));
 
+            //not add yet
+           // alarms.add(alarm);
+
+           //Task to check weather
+            WeatherPrevisionAPI wpa = new WeatherPrevisionAPI(this, alarm);
+
+            Double latitude = data.getExtras().getDouble("Latitude");
+            Double longitude = data.getExtras().getDouble("Longitude");
+            String url = String.format(getResources().getString(R.string.urlAPIweather),latitude,longitude);
+
+            wpa.execute(url+getString(R.string.weatherAPIkey)); //URL of api + location selected
+
+            alarm.setDate(date);
+
+            //Add alarm after check weather prevision
             alarms.add(alarm);
 
-            adapterAlarm.notifyDataSetChanged(); //Notify that the listview has another element
+            adapterAlarm.notifyDataSetChanged(); //Notify that the listview has changes
+
+            //Prueba valor switch
+
+
+            //Tendriamos que usar el switch
             startAlarm(true); //Valor del switch
+
 
         }
     }

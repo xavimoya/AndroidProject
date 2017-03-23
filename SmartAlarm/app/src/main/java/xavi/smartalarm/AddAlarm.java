@@ -13,6 +13,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Calendar;
 
 /**
@@ -33,6 +35,8 @@ public class AddAlarm extends AppCompatActivity {
 
     private int iday, imonth, iyear;
     private final Calendar c = Calendar.getInstance();
+
+    private Double latitude,longitude;
 
 
     @Override
@@ -73,6 +77,8 @@ public class AddAlarm extends AppCompatActivity {
                     intent.putExtra("Month", imonth);
                     intent.putExtra("Year", iyear);
                     intent.putExtra("Location",tvLocation.getText().toString());
+                    intent.putExtra("Latitude",latitude);
+                    intent.putExtra("Longitude",longitude);
                     setResult(RESULT_ADDALARM, intent);
                     finish();
                 }
@@ -129,6 +135,8 @@ public class AddAlarm extends AppCompatActivity {
         if (requestCode == resultCode && resultCode == RESULT_LOCATION) {
             String location = data.getExtras().getString("Location");
             String street = data.getExtras().getString("Street");
+            latitude = data.getExtras().getDouble("Latitude");
+            longitude = data.getExtras().getDouble("Longitude");
             TextView tv = (TextView)findViewById(R.id.locationAlarm);
             if(location==null)location="";
             if(street==null)street="";

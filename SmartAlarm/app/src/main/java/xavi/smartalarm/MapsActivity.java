@@ -159,13 +159,12 @@ public class MapsActivity extends FragmentActivity {
             Intent i = new Intent();
             i.putExtra("Location",locatename);
             i. putExtra("Street", street);
+            i.putExtra("Latitude",position.latitude);
+            i.putExtra("Longitude",position.longitude);
             setResult(RESULT_LOCATION,i);
             finish();
-        } catch (IOException e) {
-            Toast.makeText(MapsActivity.this,"Any problem to save the location.",Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }catch (Exception e){
-            Toast.makeText(MapsActivity.this,"Any problem to save the location.",Toast.LENGTH_SHORT).show();
+        } catch (Exception e){
+            Toast.makeText(MapsActivity.this,R.string.problemsSaveLocation,Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
