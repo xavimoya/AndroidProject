@@ -1,7 +1,6 @@
 package xavi.smartalarm;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -26,7 +25,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
@@ -39,6 +37,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -52,7 +55,7 @@ import java.util.Calendar;
  */
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener,
-        NavigationView.OnNavigationItemSelectedListener{
+        NavigationView.OnNavigationItemSelectedListener, ValueEventListener{
 
     private GoogleApiClient mGoogleApiClient;
     private final int RC_SIGN_IN = 9001;
@@ -70,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     AlarmManager alarmManager;
     MediaPlayer player;
     private MenuItem i,i2;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
 
 
 
@@ -83,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        alarms = new ArrayList<Alarm>();
+        alarms = new ArrayList<>();
         listView = (ListView) findViewById(R.id.listView_alarms);
         adapterAlarm = new CustomAlarmAdapter(this, alarms);
         listView.setAdapter(adapterAlarm);
@@ -128,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
 
+        database = FirebaseDatabase.getInstance();
 
 
     }
@@ -184,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
-                    public void onResult(Status status) {
+                    public void onResult(@NonNull Status status) {
                         // [START_EXCLUDE]
                         updateUI(false);
                         // [END_EXCLUDE]
@@ -255,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
 
+            assert acct != null;
             name.setText(acct.getDisplayName());
             email.setText(acct.getEmail());
             //imageView.setImageURI(acct.getPhotoUrl());
@@ -268,7 +275,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     /**
-     * This method is called when the user is signed in correctly.
+     * This method is called when the user is signed in or sign out
+     *
      * Start the next activity.
      */
 
@@ -325,17 +333,36 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             if(item.getTitle() == getString(R.string.sign_out)) signOut();
             else if(item.getTitle() == getString(R.string.sign_in)) signIn();
         } else if (id == R.id.nav_manage) {
+            DialogPreference checkdialog = new DialogPreference();
+            checkdialog.show(getFragmentManager(),"tag");
 
         }
 
         drawer.closeDrawer(GravityCompat.START);
-        return true;    }
+        return true;
+    }
 
     @Override
     public void onRestart(){
         super.onRestart();
 
 
+    }
+
+
+    //Database Methods
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        // This method is called once with the initial value and again
+        // whenever data at this location is updated.
+        String value = dataSnapshot.getValue(String.class);
+        Log.d(TAG, "Value is: " + value);
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+        // Failed to read value
+        Log.w(TAG, "Failed to read value.", databaseError.toException());
     }
 
     private class DownloadIMG extends AsyncTask<String, Void, Bitmap> {
@@ -433,6 +460,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void createAlarm(Alarm alarm){
         //Add alarm after check weather prevision
         alarms.add(alarm);
+
+        //Add alarm to database
+
+        myRef = database.getReference("Alarm-" + alarm.hashCode());
+        myRef.setValue(alarm.getTitle()+"-"+alarm.getDate().getTime().toString()+"-"+alarm.getDestiny());
+
+        // Read from the database
+        myRef.addValueEventListener(this);
 
         adapterAlarm.notifyDataSetChanged(); //Notify that the listview has changes
     }

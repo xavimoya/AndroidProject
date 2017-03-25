@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "485221616875",
-    "project_id": "smartalarm-19ca5"
+    "firebase_url": "https://smartalarm-19ca5.firebaseio.com",
+    "project_id": "smartalarm-19ca5",
+    "storage_bucket": "smartalarm-19ca5.appspot.com"
   },
   "client": [
     {
@@ -12,6 +14,10 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "485221616875-dpruhv4qgev2rnjjihfr3kojsa1fe9hu.apps.googleusercontent.com",
+          "client_type": 3
+        },
         {
           "client_id": "485221616875-jqvfjj4vrq5os1l98h8i3dij080o5bto.apps.googleusercontent.com",
           "client_type": 1,
@@ -35,11 +41,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "485221616875-dpruhv4qgev2rnjjihfr3kojsa1fe9hu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

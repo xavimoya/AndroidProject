@@ -40,6 +40,7 @@ public class WeatherPrevisionAPI extends AsyncTask<String, Void, String> {
         String response = "";
 // loop through the urls (there should only be one!) and call an http Get using the URL passed
 // to this service
+        System.out.println( "---------------\n"+urls[0]+ "\n ------------------");
 
         for (String url : urls) {
             DefaultHttpClient client = new DefaultHttpClient();
@@ -71,16 +72,20 @@ public class WeatherPrevisionAPI extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        String test = result;
+
+        System.out.println("AQUI -------------- + \n" + result + "\n ------------------");
         try {  //EXAMPLE
 
 // parse the json result returned from the service
-            JSONObject jsonResult = new JSONObject(test);
+            JSONObject jsonResult = new JSONObject(result);
 
             double humidity = jsonResult.getJSONObject("main").getDouble("humidity");
 
 // parse out the description from the JSON result
             String description = jsonResult.getJSONArray("weather").getJSONObject(0).getString("description");
+
+            System.out.println("AQUI -------------- + humidity \n" + humidity + "\n ------------------ Description \n" + description + "\n ------------------");
+
 
 
         } catch (JSONException e) {

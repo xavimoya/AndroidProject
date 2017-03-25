@@ -37,6 +37,7 @@
 
         <receiver android:name=".AlarmNotification"></receiver>
 
+
     </application>
 
 </manifest>
