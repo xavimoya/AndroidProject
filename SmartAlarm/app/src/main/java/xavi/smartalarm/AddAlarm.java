@@ -67,7 +67,10 @@ public class AddAlarm extends AppCompatActivity {
                 //check Date - check Title - check location (in process) - the time not necessary check, time now by default.
                 if (tvDate.getText().toString().isEmpty() || etTitle.getText().toString().isEmpty() || tvLocation.toString().isEmpty()) {
                     Toast.makeText(AddAlarm.this, "You don't choose all necessary data", Toast.LENGTH_SHORT).show();
-                } else {
+                } else if(etTitle.getText().toString().contains("_")){
+                    Toast.makeText(AddAlarm.this, "Title cannot contains '_' character", Toast.LENGTH_LONG).show();
+                } else
+                {
 
                     Intent intent = new Intent();
                     intent.putExtra("Hour", timePicker.getHour());

@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.v4.app.NotificationCompat;
 
 /**
@@ -12,6 +13,8 @@ import android.support.v4.app.NotificationCompat;
  */
 
 public class AlarmNotification extends BroadcastReceiver{
+
+    public MediaPlayer player;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -26,7 +29,21 @@ public class AlarmNotification extends BroadcastReceiver{
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
                 .setContentInfo("Information");
 
+
+        player = MediaPlayer.create(context,R.raw.closer);
+
+        player.start();
+
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1,builder.build());
     }
+
+    public MediaPlayer getPlayer(){
+        return player;
+    }
+
+    void pausePlayer(){
+        player.pause();
+    }
+
 }

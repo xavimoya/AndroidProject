@@ -1,26 +1,27 @@
 package xavi.smartalarm;
 
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Xavi and Reylin on 14/03/2017.
  */
 
-public class Alarm {
+class Alarm {
 
-    public Calendar date;
-    public String title;
-    public String destiny;
+    private Calendar date;
+    private String title;
+    private String destiny;
+    private int hashcode;
 
-    public Alarm(Calendar date, String title, String destiny){
+    Alarm(Calendar date, String title, String destiny){
         this.date = date;
         this.title = title;
         this.destiny = destiny;
+        this.hashcode = this.hashCode();
     }
 
     /** Setters and Getters */
-    public Calendar getDate() {
+    Calendar getDate() {
         return date;
     }
 
@@ -56,6 +57,14 @@ public class Alarm {
         cal.setTime(date.getTime());
         cal.set(Calendar.MINUTE, minute);
         this.date.setTime(cal.getTime());
+    }
+
+    public int getHashCode(){
+        return hashcode;
+    }
+
+    public void setHashcode(int code){
+        this.hashcode = code;
     }
 
 

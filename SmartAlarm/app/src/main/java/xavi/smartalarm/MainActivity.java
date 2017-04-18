@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -48,6 +47,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by Xavi and Reylin on 4/3/17.
@@ -66,13 +66,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private DrawerLayout drawer;
     private Menu menu;
     private Drawable imageD;
+    private String userID;
     private static final int RESULT_ADDALARM = 100;
     ListView listView;
     ArrayList<Alarm> alarms;
     ArrayAdapter<Alarm> adapterAlarm;
     AlarmManager alarmManager;
-    MediaPlayer player;
     private MenuItem i,i2;
+    public MediaPlayer player;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
 
@@ -135,8 +136,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         database = FirebaseDatabase.getInstance();
 
+        //Get alarms stored in databse
+        restoreAlarmsOfDatabase();
+
 
     }
+
+
 
     @Override
     public void onStart() {
@@ -249,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 */
             //Tendriamos que usar el switch
-            startAlarm(true); //Valor del switch
+            startAlarm(true,alarm.getDate()); //Valor del switch
 
 
         }
@@ -260,8 +266,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-
             assert acct != null;
+            userID = acct.getId();
             name.setText(acct.getDisplayName());
             email.setText(acct.getEmail());
             //imageView.setImageURI(acct.getPhotoUrl());
@@ -269,6 +275,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             Dimg.execute(acct.getPhotoUrl().toString());
             updateUI(true);
         } else {
+            userID = null;
             // Signed out, show unauthenticated UI.
             updateUI(false);
         }
@@ -433,7 +440,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         startActivityForResult(intentTime,RESULT_ADDALARM);
     }
 
-    private void startAlarm(boolean state) {
+    private void startAlarm(boolean state, Calendar alarm) {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent;
         PendingIntent pendingIntent;
@@ -441,35 +448,71 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //Represents the switch is true, this indicates that the alarm is activated
         // We need more info in this method to set the alarm al normal time (the alarm)
         if (state) { //true
-            intent = new Intent(MainActivity.this, AlarmNotification.class);
-            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-
+            Class alarmnotification = AlarmNotification.class;
+            intent = new Intent(MainActivity.this, alarmnotification);
+            pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
             //Notification of alarm, NOW active it 3 seconds after tou save the alarm
-            manager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime() + 3000, pendingIntent);
 
-            /*Set the alarm sound*/
-            player = MediaPlayer.create(this, R.raw.closer);
-            //Start the alarm - play
-            player.start();
+            manager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), pendingIntent);
+
             if(i2!=null)i2.setVisible(true);
 
         }
     }
 
+    public void soundAlarm(){
+
+    }
+
 
     public void createAlarm(Alarm alarm){
+
         //Add alarm after check weather prevision
         alarms.add(alarm);
 
         //Add alarm to database
 
-        myRef = database.getReference("Alarm-" + alarm.hashCode());
-        myRef.setValue(alarm.getTitle()+"-"+alarm.getDate().getTime().toString()+"-"+alarm.getDestiny());
+        myRef = database.getReference("User_" + userID);
+        DatabaseReference alarmRef = myRef.child("Alarm_"+  alarm.getHashCode());
+        DatabaseReference title = alarmRef.child("Title");
+        title.setValue(alarm.getTitle());
+        DatabaseReference date = alarmRef.child("Date");
+        date.setValue(alarm.getDate().getTime().toString());
+        DatabaseReference destiny = alarmRef.child("Destiny");
+        destiny.setValue(alarm.getDestiny());
+       // myRef.setValue(alarm.getTitle()+"_"+alarm.getDate().getTime().toString()+"_"+alarm.getDestiny());
 
         // Read from the database
         myRef.addValueEventListener(this);
 
         adapterAlarm.notifyDataSetChanged(); //Notify that the listview has changes
+    }
+
+    private void restoreAlarmsOfDatabase() {
+        //Store alarms from databse in alarmList
+        List<Alarm> alarmList = new ArrayList<>();
+
+        //Get alarms from database
+        //database.getReference....
+
+        //                  INCOMPLETE
+        DatabaseReference alarmRef = database.getReference("User_" + userID);
+        System.out.println("----------  aquiiiiiii -------    \n     " + alarmRef.toString());
+        //
+        //At end browse the list and save the alarms in listview.
+        for (Alarm a : alarmList){
+            alarms.add(a);
+        }
+        adapterAlarm.notifyDataSetChanged(); //Notify changes
+
+
+    }
+
+
+    private void removeAlarmsOfDatabase(){
+        //For all references
+        DatabaseReference alarmRef = database.getReference("User_" + userID);
+        alarmRef.removeValue();
     }
 
 
