@@ -11,6 +11,12 @@
             android:id="@+id/nav_Editalarm"
             android:icon="@android:drawable/ic_popup_reminder"
             android:title="Edit alarms" />
+        <item
+            android:id="@+id/deleteAlarms"
+            android:icon="@android:drawable/ic_delete"
+            android:title="Delete alarms" />
+
+        />
     </group>
 
     <item android:title="Options">

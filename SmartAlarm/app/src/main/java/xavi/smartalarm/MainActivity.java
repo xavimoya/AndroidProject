@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 */
             //Tendriamos que usar el switch
-            startAlarm(true,alarm.getDate()); //Valor del switch
+            startAlarm(true, alarm.getDate()); //Valor del switch
 
 
         }
@@ -343,6 +343,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             DialogPreference checkdialog = new DialogPreference();
             checkdialog.show(getFragmentManager(),"tag");
 
+        }else if(id == R.id.deleteAlarms){
+            removeAlarmsOfDatabase();
         }
 
         drawer.closeDrawer(GravityCompat.START);
@@ -362,8 +364,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void onDataChange(DataSnapshot dataSnapshot) {
         // This method is called once with the initial value and again
         // whenever data at this location is updated.
-        String value = dataSnapshot.getValue(String.class);
-        Log.d(TAG, "Value is: " + value);
+       // String value = dataSnapshot.getValue(String.class);
+       // Log.d(TAG, "Value is: " + value);
     }
 
     @Override
@@ -428,7 +430,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 newAlarm();
                 break;
             case R.id.pauseButton:
-                player.stop();
+             //   player.stop();
                 if(i2!=null)i2.setVisible(false);
                 break;
         }
@@ -446,12 +448,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         PendingIntent pendingIntent;
 
         //Represents the switch is true, this indicates that the alarm is activated
-        // We need more info in this method to set the alarm al normal time (the alarm)
         if (state) { //true
-            Class alarmnotification = AlarmNotification.class;
-            intent = new Intent(MainActivity.this, alarmnotification);
+            intent = new Intent(MainActivity.this, AlarmNotification.class);
             pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
-            //Notification of alarm, NOW active it 3 seconds after tou save the alarm
 
             manager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), pendingIntent);
 
@@ -460,9 +459,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
-    public void soundAlarm(){
-
-    }
 
 
     public void createAlarm(Alarm alarm){
@@ -473,6 +469,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //Add alarm to database
 
         myRef = database.getReference("User_" + userID);
+        DatabaseReference username = myRef.child("User Name");
+        username.setValue(name.getText());
         DatabaseReference alarmRef = myRef.child("Alarm_"+  alarm.getHashCode());
         DatabaseReference title = alarmRef.child("Title");
         title.setValue(alarm.getTitle());

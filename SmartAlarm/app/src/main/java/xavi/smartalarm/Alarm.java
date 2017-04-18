@@ -57,6 +57,7 @@ class Alarm {
         cal.setTime(date.getTime());
         cal.set(Calendar.MINUTE, minute);
         this.date.setTime(cal.getTime());
+
     }
 
     public int getHashCode(){

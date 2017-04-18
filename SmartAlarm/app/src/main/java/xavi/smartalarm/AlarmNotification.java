@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Button;
 
 /**
  * Created by Xavi and Reylin on 22/03/2017.
@@ -33,16 +34,21 @@ public class AlarmNotification extends BroadcastReceiver{
         player = MediaPlayer.create(context,R.raw.closer);
 
         player.start();
+        player.setLooping(true);
+
+        createStopButton();
 
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1,builder.build());
     }
 
-    public MediaPlayer getPlayer(){
-        return player;
+    private void createStopButton() {
+
+
     }
 
-    void pausePlayer(){
+
+    private void pausePlayer(){
         player.pause();
     }
 
