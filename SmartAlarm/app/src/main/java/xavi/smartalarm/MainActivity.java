@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -36,6 +37,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -76,6 +79,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public MediaPlayer player;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private Intent intent;
+
+    private FirebaseAuth mAuth;
+
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
 
 
 
@@ -86,8 +95,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         setContentView(R.layout.drawerlayout);
 
 
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      //  assert getSupportActionBar() != null;
+     //   getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         alarms = new ArrayList<>();
         listView = (ListView) findViewById(R.id.listView_alarms);
@@ -134,10 +143,35 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
 
+
+        //Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+
+                    updateUI(true);
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    updateUI(false);
+                }
+                // ...
+            }
+        };
+
+
         database = FirebaseDatabase.getInstance();
 
         //Get alarms stored in databse
         restoreAlarmsOfDatabase();
+
+        intent = new Intent(MainActivity.this, AlarmNotification.class);
 
 
     }
@@ -147,6 +181,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onStart() {
         super.onStart();
+
+        mAuth.addAuthStateListener(mAuthListener);
+
 
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if (opr.isDone()) {
@@ -171,6 +208,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     @Override
+    public void onRestart(){
+        super.onRestart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
@@ -188,8 +238,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void signIn() {
+        //sign in google
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+        //sign in firebase
+
     }
 
     private void signOut() {
@@ -351,12 +404,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         return true;
     }
 
-    @Override
-    public void onRestart(){
-        super.onRestart();
-
-
-    }
 
 
     //Database Methods
@@ -431,6 +478,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 break;
             case R.id.pauseButton:
              //   player.stop();
+
+                intent.putExtra("info","stop");
+                sendBroadcast(intent);
                 if(i2!=null)i2.setVisible(false);
                 break;
         }
@@ -444,15 +494,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void startAlarm(boolean state, Calendar alarm) {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent;
+       // Intent intent;
         PendingIntent pendingIntent;
 
         //Represents the switch is true, this indicates that the alarm is activated
         if (state) { //true
-            intent = new Intent(MainActivity.this, AlarmNotification.class);
+           // intent = new Intent(MainActivity.this, AlarmNotification.class);
+            intent.putExtra("info","sound");
             pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
 
-            manager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), pendingIntent);
+
+            manager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);  //sounds now
+
+           // manager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), pendingIntent);       //sounds when the alarm is configured
 
             if(i2!=null)i2.setVisible(true);
 

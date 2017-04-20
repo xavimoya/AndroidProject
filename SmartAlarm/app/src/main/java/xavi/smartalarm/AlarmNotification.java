@@ -19,27 +19,51 @@ public class AlarmNotification extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-
-        builder.setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Alarm activated")
-                .setContentText("Alarm alarm alarm alarm alarm text")
-                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
-                .setContentInfo("Information");
 
 
-        player = MediaPlayer.create(context,R.raw.closer);
+     /*   if(intent.getStringExtra("info").equals("sound")){
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
-        player.start();
-        player.setLooping(true);
+            builder.setAutoCancel(true)
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setWhen(System.currentTimeMillis())
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle("Alarm activated")
+                    .setContentText("Alarm alarm alarm alarm alarm text")
+                    .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
+                    .setContentInfo("Information");
 
-        createStopButton();
 
-        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1,builder.build());
+            player = MediaPlayer.create(context,R.raw.closer);
+
+            player.start();
+            player.setLooping(true);
+
+            createStopButton();
+
+            NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(1,builder.build());
+        }else{
+            player.stop();
+
+        }*/
+
+        Intent i = new Intent(context, alarmService.class);
+        String str = intent.getExtras().getString("info");
+        if(str != null) {
+            if (str.equals("sound")) {
+                i.putExtra("info", "sound");
+                context.startService(i);
+            } else if(str.equals("stop")) {
+                context.stopService(i);
+            } else {
+
+            }
+        }else{
+
+        }
+
+
     }
 
     private void createStopButton() {

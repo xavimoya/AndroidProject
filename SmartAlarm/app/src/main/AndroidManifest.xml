@@ -35,7 +35,9 @@
         <activity android:name=".MapsActivity">
         </activity>
 
-        <receiver android:name=".AlarmNotification"></receiver>
+        <receiver android:name=".AlarmNotification" />
+
+        <service android:enabled="true" android:name=".alarmService"/>
 
 
     </application>
