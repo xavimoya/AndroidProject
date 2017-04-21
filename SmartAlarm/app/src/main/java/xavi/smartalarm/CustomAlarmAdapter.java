@@ -43,7 +43,7 @@ class CustomAlarmAdapter extends ArrayAdapter<Alarm>{
         if (minutes < 10)text.concat("0"+minutes);
         else text.concat(String.valueOf(minutes));
         time.setText(text);
-        date.setText(alarm.getDate().get(Calendar.DAY_OF_MONTH) +"/" + alarm.getDate().get(Calendar.MONTH)+1 + "/" + alarm.getDate().get(Calendar.YEAR));
+        date.setText(alarm.getDate().get(Calendar.DAY_OF_MONTH) +"/" + (alarm.getDate().get(Calendar.MONTH)+1) + "/" + alarm.getDate().get(Calendar.YEAR));
         location.setText(alarm.getDestiny());
 
 

@@ -31,12 +31,16 @@ public class MapsActivity extends FragmentActivity {
     private static final int RESULT_LOCATION = 101;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LatLng position = new LatLng(0,0);
+    private EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+
+        editText = (EditText) findViewById(R.id.TFaddress);
+        final Geocoder geocoder = new Geocoder(this);
 
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -45,6 +49,14 @@ public class MapsActivity extends FragmentActivity {
                 mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                 position = latLng;
+                List<Address> addressList = null;
+                try {
+                    addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude,1);
+                    editText.setText(addressList.get(0).getLocality() + ", " + addressList.get(0).getAddressLine(0));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
     }

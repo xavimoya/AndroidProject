@@ -18,6 +18,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -217,7 +218,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onRestart(){
+
         super.onRestart();
+
+
     }
 
     @Override
@@ -314,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 */
             //Tendriamos que usar el switch
-            startAlarm(true, alarm.getDate()); //Valor del switch
+            startAlarm(true, alarm); //Valor del switch
 
 
         }
@@ -519,7 +523,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         startActivityForResult(intentTime,RESULT_ADDALARM);
     }
 
-    private void startAlarm(boolean state, Calendar alarm) {
+    private void startAlarm(boolean state, Alarm alarm) {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
        // Intent intent;
         PendingIntent pendingIntent;
@@ -528,12 +532,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (state) { //true
            // intent = new Intent(MainActivity.this, AlarmNotification.class);
             intent.putExtra("info","sound");
+            intent.putExtra("text",alarm.getTitle());
             pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
 
 
 //            manager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);  //sounds now
 
-            manager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), pendingIntent);       //sounds when the alarm is configured
+            manager.set(AlarmManager.RTC_WAKEUP, alarm.getDate().getTimeInMillis(), pendingIntent);       //sounds when the alarm is configured
 
             if(i2!=null)i2.setVisible(true);
 

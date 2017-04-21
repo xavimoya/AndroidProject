@@ -15,44 +15,15 @@ import android.widget.Button;
 
 public class AlarmNotification extends BroadcastReceiver{
 
-    public MediaPlayer player;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-
-     /*   if(intent.getStringExtra("info").equals("sound")){
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-
-            builder.setAutoCancel(true)
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("Alarm activated")
-                    .setContentText("Alarm alarm alarm alarm alarm text")
-                    .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
-                    .setContentInfo("Information");
-
-
-            player = MediaPlayer.create(context,R.raw.closer);
-
-            player.start();
-            player.setLooping(true);
-
-            createStopButton();
-
-            NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(1,builder.build());
-        }else{
-            player.stop();
-
-        }*/
-
         Intent i = new Intent(context, alarmService.class);
         String str = intent.getExtras().getString("info");
         if(str != null) {
             if (str.equals("sound")) {
                 i.putExtra("info", "sound");
+                i.putExtra("text",intent.getExtras().getString("text"));
                 context.startService(i);
             } else if(str.equals("stop")) {
                 context.stopService(i);
@@ -66,14 +37,12 @@ public class AlarmNotification extends BroadcastReceiver{
 
     }
 
+
     private void createStopButton() {
 
 
     }
 
 
-    private void pausePlayer(){
-        player.pause();
-    }
 
 }

@@ -13,6 +13,7 @@ import android.widget.Toast;
 public class alarmService extends Service {
 
 	private MediaPlayer player;
+    private String textAlarm;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -24,7 +25,7 @@ public class alarmService extends Service {
 
 	@Override
 	public void onDestroy() {
-		Toast.makeText(this, "Servicio Detenido", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "Alarma detenida", Toast.LENGTH_LONG).show();
         if (player != null) {
             player.stop();
         }
@@ -34,13 +35,11 @@ public class alarmService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid) {
         String str = intent.getExtras().getString("info");
+        textAlarm = intent.getExtras().getString("text");
         if (str != null) {
             if (str.equals("sound")) {
 
                 Context context = getApplicationContext();
-              /*  sonido = MediaPlayer.create(this, R.raw.closer);
-                sonido.setLooping(true);
-                sonido.start();*/
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
@@ -49,7 +48,7 @@ public class alarmService extends Service {
                         .setWhen(System.currentTimeMillis())
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("Alarm activated")
-                        .setContentText("Alarm alarm alarm alarm alarm text")
+                        .setContentText(textAlarm)
                         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
                         .setContentInfo("Information");
 

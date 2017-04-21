@@ -9,6 +9,7 @@ import android.view.View;
  * Created by Xavi on 21/4/17.
  */
 
+
 class ConfigurationActivity extends AppCompatActivity implements View.OnClickListener{
 
 
