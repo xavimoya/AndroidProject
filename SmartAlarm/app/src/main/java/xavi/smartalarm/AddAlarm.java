@@ -44,7 +44,7 @@ public class AddAlarm extends AppCompatActivity {
         setContentView(R.layout.activity_addalarm);
 
         iyear = c.get(Calendar.YEAR); // current year
-        imonth = c.get(Calendar.MONTH) + 1; // current month (starts on 0)
+        imonth = c.get(Calendar.MONTH); // current month (starts on 0)
         iday = c.get(Calendar.DAY_OF_MONTH); // current day
 
         /*Time*/
@@ -106,7 +106,6 @@ public class AddAlarm extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                monthOfYear = monthOfYear + 1;
 
                                 TextView tvDate = (TextView) findViewById(R.id.dateAlarm);
                                 tvDate.setText(dayOfMonth + "/" + monthOfYear + "/" + year);

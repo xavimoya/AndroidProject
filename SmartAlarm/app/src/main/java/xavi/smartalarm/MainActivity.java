@@ -504,9 +504,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
 
 
-            manager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);  //sounds now
+//            manager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);  //sounds now
 
-           // manager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), pendingIntent);       //sounds when the alarm is configured
+            manager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), pendingIntent);       //sounds when the alarm is configured
 
             if(i2!=null)i2.setVisible(true);
 
