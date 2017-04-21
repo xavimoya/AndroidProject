@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -26,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -37,8 +39,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private Drawable imageD;
     private String userID;
     private static final int RESULT_ADDALARM = 100;
+    private SharedPreferences preferences;
     ListView listView;
     ArrayList<Alarm> alarms;
     ArrayAdapter<Alarm> adapterAlarm;
@@ -97,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
       //  assert getSupportActionBar() != null;
      //   getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+        preferences = getSharedPreferences("MyPreferences",MODE_PRIVATE);
 
         alarms = new ArrayList<>();
         listView = (ListView) findViewById(R.id.listView_alarms);
@@ -129,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("485221616875-dpruhv4qgev2rnjjihfr3kojsa1fe9hu.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
@@ -153,13 +164,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-
-                    updateUI(true);
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
-                    updateUI(false);
                 }
                 // ...
             }
@@ -241,7 +249,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //sign in google
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
-        //sign in firebase
 
     }
 
@@ -250,11 +257,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(@NonNull Status status) {
-                        // [START_EXCLUDE]
                         updateUI(false);
-                        // [END_EXCLUDE]
                     }
                 });
+        mAuth.signOut();
 
     }
 
@@ -319,6 +325,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
+
+            AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+            mAuth.signInWithCredential(credential)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "signInWithCredential", task.getException());
+                                Toast.makeText(MainActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }else{
+
+
+                            }
+                        }
+                    });
+
             assert acct != null;
             userID = acct.getId();
             name.setText(acct.getDisplayName());
@@ -393,8 +418,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             if(item.getTitle() == getString(R.string.sign_out)) signOut();
             else if(item.getTitle() == getString(R.string.sign_in)) signIn();
         } else if (id == R.id.nav_manage) {
-            DialogPreference checkdialog = new DialogPreference();
-            checkdialog.show(getFragmentManager(),"tag");
+           // DialogPreference checkdialog = new DialogPreference();
+           // checkdialog.show(getFragmentManager(),"tag");
+
+            startActivity(new Intent(getApplicationContext(), ConfigurationActivity.class));
 
         }else if(id == R.id.deleteAlarms){
             removeAlarmsOfDatabase();
