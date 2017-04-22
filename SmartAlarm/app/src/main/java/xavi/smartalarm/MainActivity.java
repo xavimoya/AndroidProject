@@ -11,14 +11,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,7 +56,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
 
 /**
  * Created by Xavi and Reylin on 4/3/17.
@@ -93,8 +91,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private FirebaseAuth mAuth;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
-
-
+    private int numberOfAlarms;
 
 
     @Override
@@ -177,8 +174,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         database = FirebaseDatabase.getInstance();
 
-        //Get alarms stored in databse
-        restoreAlarmsOfDatabase();
 
         intent = new Intent(MainActivity.this, AlarmNotification.class);
 
@@ -230,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+        //databaseReference.removeEventListener(listener);
     }
 
     @Override
@@ -291,7 +287,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     data.getIntExtra("Month",0),
                     data.getIntExtra("Day",0),
                     data.getIntExtra("Hour",0),
-                    data.getIntExtra("Minute",0));
+                    data.getIntExtra("Minute",0),
+                    0);  //seconds
 
             Alarm alarm = new Alarm(date,data.getExtras().getString("Title"), data.getExtras().getString("Location"));
 
@@ -314,7 +311,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
             adapterAlarm.notifyDataSetChanged(); //Notify that the listview has changes
 
-            //Prueba valor switch
 
 */
             //Tendriamos que usar el switch
@@ -355,9 +351,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             //imageView.setImageURI(acct.getPhotoUrl());
             DownloadIMG Dimg = new DownloadIMG();
             Dimg.execute(acct.getPhotoUrl().toString());
+
+            //Get alarms stored in database
+            restoreAlarmsOfDatabase();
+
+
             updateUI(true);
         } else {
-            userID = null;
+            userID = "null";
             // Signed out, show unauthenticated UI.
             updateUI(false);
         }
@@ -440,6 +441,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     //Database Methods
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
+
         // This method is called once with the initial value and again
         // whenever data at this location is updated.
        // String value = dataSnapshot.getValue(String.class);
@@ -554,17 +556,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         //Add alarm to database
 
-        myRef = database.getReference("User_" + userID);
+        //myRef = database.getReference("User_" + userID);
         DatabaseReference username = myRef.child("User Name");
         username.setValue(name.getText());
+        DatabaseReference counter = myRef.child("Alarms_Counter");
+        counter.setValue(alarms.size());
         DatabaseReference alarmRef = myRef.child("Alarm_"+  alarm.getHashCode());
         DatabaseReference title = alarmRef.child("Title");
         title.setValue(alarm.getTitle());
         DatabaseReference date = alarmRef.child("Date");
-        date.setValue(alarm.getDate().getTime().toString());
+        date.setValue(alarm.getDate().getTime());
+        //date.setValue(alarm.getDate().getTime().toString());
         DatabaseReference destiny = alarmRef.child("Destiny");
         destiny.setValue(alarm.getDestiny());
-       // myRef.setValue(alarm.getTitle()+"_"+alarm.getDate().getTime().toString()+"_"+alarm.getDestiny());
 
         // Read from the database
         myRef.addValueEventListener(this);
@@ -573,20 +577,74 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void restoreAlarmsOfDatabase() {
-        //Store alarms from databse in alarmList
-        List<Alarm> alarmList = new ArrayList<>();
-
         //Get alarms from database
-        //database.getReference....
 
-        //                  INCOMPLETE
-        DatabaseReference alarmRef = database.getReference("User_" + userID);
-        System.out.println("----------  aquiiiiiii -------    \n     " + alarmRef.toString());
+       // DatabaseReference alarmRef = database.getReference("User_" + userID);
+        myRef = database.getReference("User_" + userID);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (final DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    if(snapshot.getKey().equals("Alarms_Counter")){
+                        numberOfAlarms = Integer.parseInt(snapshot.getValue().toString());
+                    }if(snapshot.getKey().contains("Alarm_")){
+                        String name = snapshot.getKey();
+                        name = name.substring(6);
+                        boolean validAlarm = true;
+                        for (Alarm a : alarms){
+                            if (a.getHashCode() == Integer.parseInt(name)){
+                                validAlarm = false;
+                            }
+                        }
+                        if(validAlarm){
+                            myRef.child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Calendar cal = Calendar.getInstance();
+                                    String title="";
+                                    String dest = "";
+
+                                    for (DataSnapshot snapshot1 : dataSnapshot.getChildren()){
+                                        switch (snapshot1.getKey()){
+                                            case "Date":
+                                                cal.setTime(snapshot1.getValue(Date.class));
+                                                break;
+                                            case "Title":
+                                                title = (String) snapshot1.getValue();
+                                                break;
+                                            case "Destiny":
+                                                dest = (String) snapshot1.getValue();
+                                                break;
+                                        }
+                                    }
+                                    Alarm a = new Alarm(cal,title,dest);
+                                    a.setHashcode(Integer.parseInt(snapshot.getKey().substring(6)));
+                                    if (!alarms.contains(a)) alarms.add(a);  //createAlarm(a);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+
+
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         //
-        //At end browse the list and save the alarms in listview.
-        for (Alarm a : alarmList){
-            alarms.add(a);
-        }
+
+
         adapterAlarm.notifyDataSetChanged(); //Notify changes
 
 
@@ -597,6 +655,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //For all references
         DatabaseReference alarmRef = database.getReference("User_" + userID);
         alarmRef.removeValue();
+        for(Alarm a : alarms){
+            alarms.remove(a);
+        }
+        adapterAlarm.notifyDataSetChanged(); //Notify changes
     }
 
 
