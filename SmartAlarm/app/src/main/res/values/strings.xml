@@ -35,6 +35,10 @@
     <string name="weatherAPIkey">56ea67b66ab8d74fb18f0958284c324b</string>
     <string name="urlAPIweather"><![CDATA[http://samples.openweathermap.org/data/2.5/forecast?lat=%2$f&lon=%2$f&appid=]]></string>
     <string name="problemsSaveLocation">Some problem to save the location.</string>
+    <string name="preference_update_wifi">Update only with wi-fi</string>
+    <string name="preference_active_weather">Active smartAlarm with weather</string>
+    <string name="preference_active_traffic">Active smartAlarm with traffic</string>
+    <string name="saveBtn">Save</string>
 
 
 </resources>

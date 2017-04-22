@@ -52,7 +52,12 @@ public class MapsActivity extends FragmentActivity {
                 List<Address> addressList = null;
                 try {
                     addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude,1);
-                    editText.setText(addressList.get(0).getLocality() + ", " + addressList.get(0).getAddressLine(0));
+                    String location,street;
+                    location = addressList.get(0).getLocality();
+                    street = addressList.get(0).getAddressLine(0);
+                    if(location==null)location="";
+                    if(street==null)street="";
+                    editText.setText(location + ", " +street);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

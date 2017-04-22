@@ -101,8 +101,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         setContentView(R.layout.drawerlayout);
 
 
-      //  assert getSupportActionBar() != null;
-     //   getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu24);
 
         preferences = getSharedPreferences("MyPreferences",MODE_PRIVATE);
 
@@ -227,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
         //databaseReference.removeEventListener(listener);
     }
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -516,6 +518,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 sendBroadcast(intent);
                 if(i2!=null)i2.setVisible(false);
                 break;
+            case android.R.id.home:
+                drawer.openDrawer(GravityCompat.START);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -675,4 +680,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void setAlarm(Alarm alarm){
 
     }
+
+
 }
