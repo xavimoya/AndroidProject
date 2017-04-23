@@ -1,9 +1,10 @@
 package xavi.smartalarm;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +33,7 @@ public class AddAlarm extends AppCompatActivity {
     private Button button_save, button_date, button_location;
 
     private DatePickerDialog datePickerDialog;
+    private TimePickerFragment timePickerFragment;
 
     private int iday, imonth, iyear;
     private final Calendar c = Calendar.getInstance();
@@ -52,11 +54,26 @@ public class AddAlarm extends AppCompatActivity {
         iday = c.get(Calendar.DAY_OF_MONTH); // current day
 
         /*Time*/
-        timePicker = (TimePicker) findViewById(R.id.timePicker);
+        if(Build.VERSION.SDK_INT < 23){
+            timePickerFragment = new TimePickerFragment();
+            Button b = (Button)findViewById(R.id.button_time);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    timePickerFragment.show(getSupportFragmentManager(), "timePicker");
+                }
+            });
+         //   timePickerFragment.
+        }else{
+            timePicker = (TimePicker) findViewById(R.id.timePicker);
+            timePicker.setIs24HourView(true);
+        }
+
+
         title = (EditText) findViewById(R.id.textView_title);
         button_save = (Button) findViewById(R.id.button_set);
 
-        timePicker.setIs24HourView(true);
+
 
 
         button_save.setOnClickListener(new View.OnClickListener() {
@@ -76,8 +93,14 @@ public class AddAlarm extends AppCompatActivity {
                 {
 
                     Intent intent = new Intent();
-                    intent.putExtra(getString(R.string.hour), timePicker.getHour());
-                    intent.putExtra(getString(R.string.minute), timePicker.getMinute());
+                    if(Build.VERSION.SDK_INT > 23){
+                        intent.putExtra(getString(R.string.hour), timePicker.getHour());
+                        intent.putExtra(getString(R.string.minute), timePicker.getMinute());
+                    }else{
+                        intent.putExtra(getString(R.string.hour),timePickerFragment.gethour() );
+                        intent.putExtra(getString(R.string.minute), timePickerFragment.getminute());
+                    }
+
                     intent.putExtra(getString(R.string.titleUntranslatable), title.getText().toString());
                     intent.putExtra(getString(R.string.day), iday);
                     intent.putExtra(getString(R.string.month), imonth);
