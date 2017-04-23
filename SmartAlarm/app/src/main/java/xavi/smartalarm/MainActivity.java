@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -84,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     ArrayAdapter<Alarm> adapterAlarm;
     AlarmManager alarmManager;
     private MenuItem i,i2;
-    public MediaPlayer player;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private Intent intent;
@@ -92,13 +90,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private FirebaseAuth mAuth;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private int numberOfAlarms;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      //  setContentView(R.layout.activity_main);
         setContentView(R.layout.drawerlayout);
 
 
@@ -106,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu24);
 
-        preferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        preferences = getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE);
 
         alarms = new ArrayList<>();
         listView = (ListView) findViewById(R.id.listView_alarms);
@@ -139,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("485221616875-dpruhv4qgev2rnjjihfr3kojsa1fe9hu.apps.googleusercontent.com")
+                .requestIdToken(getString(R.string.idTokenGoogle))
                 .requestEmail()
                 .build();
 
@@ -164,10 +159,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d(TAG, getString(R.string.LogAuthSignedIn) + user.getUid());
                 } else {
                     // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Log.d(TAG, getString(R.string.LogAuthSignedOut));
                 }
                 // ...
             }
@@ -195,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (opr.isDone()) {
             // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
             // and the GoogleSignInResult will be available instantly.
-            Log.d(TAG, "Got cached sign-in");
+            Log.d(TAG, getString(R.string.LogCachedSignIn));
             GoogleSignInResult result = opr.get();
             handleSignInResult(result);
         } else {
@@ -235,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        Log.d(TAG, getString(R.string.LogConnFail) + connectionResult);
     }
 
     @Override
@@ -286,29 +281,29 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
             //year, month, day, hour, minute
 
-            date.set(data.getIntExtra("Year",0),
-                    data.getIntExtra("Month",0),
-                    data.getIntExtra("Day",0),
-                    data.getIntExtra("Hour",0),
-                    data.getIntExtra("Minute",0),
+            date.set(data.getIntExtra(getString(R.string.year),0),
+                    data.getIntExtra(getString(R.string.month),0),
+                    data.getIntExtra(getString(R.string.day),0),
+                    data.getIntExtra(getString(R.string.hour),0),
+                    data.getIntExtra(getString(R.string.minute),0),
                     0);  //seconds
 
-            Alarm alarm = new Alarm(date,data.getExtras().getString("Title"), data.getExtras().getString("Location"));
+            Alarm alarm = new Alarm(date,data.getExtras().getString(getString(R.string.title)), data.getExtras().getString(getString(R.string.location)));
 
             //not add yet
            // alarms.add(alarm);
 
            //Task to check weather
-            if(preferences.getString("useWeather","yes").equals("yes")){
+            if(preferences.getString(getString(R.string.useWeather),getString(R.string.yes)).equals(getString(R.string.yes))){
                 WeatherPrevisionAPI wpa = new WeatherPrevisionAPI(this, alarm);
 
-                Double latitude = data.getExtras().getDouble("Latitude");
-                Double longitude = data.getExtras().getDouble("Longitude");
+                Double latitude = data.getExtras().getDouble(getString(R.string.latitude));
+                Double longitude = data.getExtras().getDouble(getString(R.string.longitude));
                 String url = String.format(getResources().getString(R.string.urlAPIweather),latitude,longitude);
 
                 wpa.execute(url+getString(R.string.weatherAPIkey)); //URL of api + location selected
 
-                Toast.makeText(this,"For meteorological reasons the alarm will sound before",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.ToastAlarmMeteo,Toast.LENGTH_SHORT).show();
 
             }else{
                 createAlarm(alarm);
@@ -324,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        Log.d(TAG, getString(R.string.LogHandleSignIn) + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
@@ -334,14 +329,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                            Log.d(TAG, getString(R.string.LogSigninCredentialCompl) + task.isSuccessful());
 
                             if (!task.isSuccessful()) {
-                                Log.w(TAG, "signInWithCredential", task.getException());
-                                Toast.makeText(MainActivity.this, "Authentication failed.",
+                                Log.w(TAG, getString(R.string.LogSignInCredentials), task.getException());
+                                Toast.makeText(MainActivity.this, R.string.ToastAuthFail,
                                         Toast.LENGTH_SHORT).show();
                             }else{
-                                FirebaseMessaging.getInstance().subscribeToTopic("news");
+                                FirebaseMessaging.getInstance().subscribeToTopic(getString(R.string.topicNews));
 
                             }
                         }
@@ -357,7 +352,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
             //Get alarms stored in database
             restoreAlarmsOfDatabase();
-
 
             updateUI(true);
         } else {
@@ -426,9 +420,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             if(item.getTitle() == getString(R.string.sign_out)) signOut();
             else if(item.getTitle() == getString(R.string.sign_in)) signIn();
         } else if (id == R.id.nav_manage) {
-           // DialogPreference checkdialog = new DialogPreference();
-           // checkdialog.show(getFragmentManager(),"tag");
-
             startActivity(new Intent(getApplicationContext(), ConfigurationActivity.class));
 
         }else if(id == R.id.deleteAlarms){
@@ -454,7 +445,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onCancelled(DatabaseError databaseError) {
         // Failed to read value
-        Log.w(TAG, "Failed to read value.", databaseError.toException());
+        Log.w(TAG, getString(R.string.LogFailRead), databaseError.toException());
     }
 
     private class DownloadIMG extends AsyncTask<String, Void, Bitmap> {
@@ -485,7 +476,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 }
 
             } catch (Exception ex) {
-                Log.e("Exception", ex.toString());
+                Log.e(getString(R.string.exception), ex.toString());
             }
             return bmp;
         }
@@ -513,9 +504,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 newAlarm();
                 break;
             case R.id.pauseButton:
-             //   player.stop();
-
-                intent.putExtra("info","stop");
+                intent.putExtra(getString(R.string.info),getString(R.string.stop));
                 sendBroadcast(intent);
                 if(i2!=null)i2.setVisible(false);
                 break;
@@ -539,8 +528,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //Represents the switch is true, this indicates that the alarm is activated
         if (state) { //true
            // intent = new Intent(MainActivity.this, AlarmNotification.class);
-            intent.putExtra("info","sound");
-            intent.putExtra("text",alarm.getTitle());
+            intent.putExtra(getString(R.string.info),getString(R.string.sound));
+            intent.putExtra(getString(R.string.text),alarm.getTitle());
             pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
 
 
@@ -563,17 +552,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //Add alarm to database
 
         //myRef = database.getReference("User_" + userID);
-        DatabaseReference username = myRef.child("User Name");
+        DatabaseReference username = myRef.child(getString(R.string.UserName));
         username.setValue(name.getText());
-        DatabaseReference counter = myRef.child("Alarms_Counter");
+        DatabaseReference counter = myRef.child(getString(R.string.AlarmsCounterUntranslatable));
         counter.setValue(alarms.size());
-        DatabaseReference alarmRef = myRef.child("Alarm_"+  alarm.getHashCode());
-        DatabaseReference title = alarmRef.child("Title");
+        DatabaseReference alarmRef = myRef.child(getString(R.string.Alarm_Untranslatable)+  alarm.getHashCode());
+        DatabaseReference title = alarmRef.child(getString(R.string.titleUntranslatable));
         title.setValue(alarm.getTitle());
-        DatabaseReference date = alarmRef.child("Date");
+        DatabaseReference date = alarmRef.child(getString(R.string.dateUntranslatable));
         date.setValue(alarm.getDate().getTime());
         //date.setValue(alarm.getDate().getTime().toString());
-        DatabaseReference destiny = alarmRef.child("Destiny");
+        DatabaseReference destiny = alarmRef.child(getString(R.string.destinyUntranslatable));
         destiny.setValue(alarm.getDestiny());
 
         // Read from the database
@@ -586,14 +575,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //Get alarms from database
 
        // DatabaseReference alarmRef = database.getReference("User_" + userID);
-        myRef = database.getReference("User_" + userID);
+        myRef = database.getReference(getString(R.string.User_Untranslatable) + userID);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (final DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    if(snapshot.getKey().equals("Alarms_Counter")){
-                        numberOfAlarms = Integer.parseInt(snapshot.getValue().toString());
-                    }if(snapshot.getKey().contains("Alarm_")){
+
+                    if(snapshot.getKey().contains(getString(R.string.Alarm_Untranslatable))){
                         String name = snapshot.getKey();
                         name = name.substring(6);
                         boolean validAlarm = true;
@@ -659,7 +647,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void removeAlarmsOfDatabase(){
         //For all references
-        DatabaseReference alarmRef = database.getReference("User_" + userID);
+        DatabaseReference alarmRef = database.getReference(getString(R.string.User_Untranslatable) + userID);
         alarmRef.removeValue();
       /*  for(int i=0; i<alarms.size();i++){
             alarms.remove(i);

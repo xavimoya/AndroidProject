@@ -69,22 +69,22 @@ public class AddAlarm extends AppCompatActivity {
                 TextView tvLocation = (TextView)findViewById(R.id.locationAlarm);
                 //check Date - check Title - check location (in process) - the time not necessary check, time now by default.
                 if (tvDate.getText().toString().isEmpty() || etTitle.getText().toString().isEmpty() || tvLocation.toString().isEmpty()) {
-                    Toast.makeText(AddAlarm.this, "You don't choose all necessary data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddAlarm.this, R.string.ToastMoreNecessaryData, Toast.LENGTH_SHORT).show();
                 } else if(etTitle.getText().toString().contains("_")){
-                    Toast.makeText(AddAlarm.this, "Title cannot contains '_' character", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddAlarm.this, R.string.ToastBadCharacter, Toast.LENGTH_LONG).show();
                 } else
                 {
 
                     Intent intent = new Intent();
-                    intent.putExtra("Hour", timePicker.getHour());
-                    intent.putExtra("Minute", timePicker.getMinute());
-                    intent.putExtra("Title", title.getText().toString());
-                    intent.putExtra("Day", iday);
-                    intent.putExtra("Month", imonth);
-                    intent.putExtra("Year", iyear);
-                    intent.putExtra("Location",tvLocation.getText().toString());
-                    intent.putExtra("Latitude",latitude);
-                    intent.putExtra("Longitude",longitude);
+                    intent.putExtra(getString(R.string.hour), timePicker.getHour());
+                    intent.putExtra(getString(R.string.minute), timePicker.getMinute());
+                    intent.putExtra(getString(R.string.titleUntranslatable), title.getText().toString());
+                    intent.putExtra(getString(R.string.day), iday);
+                    intent.putExtra(getString(R.string.month), imonth);
+                    intent.putExtra(getString(R.string.year), iyear);
+                    intent.putExtra(getString(R.string.location),tvLocation.getText().toString());
+                    intent.putExtra(getString(R.string.latitude),latitude);
+                    intent.putExtra(getString(R.string.longitude),longitude);
                     setResult(RESULT_ADDALARM, intent);
                     finish();
                 }
@@ -138,10 +138,10 @@ public class AddAlarm extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == resultCode && resultCode == RESULT_LOCATION) {
-            String location = data.getExtras().getString("Location");
-            String street = data.getExtras().getString("Street");
-            latitude = data.getExtras().getDouble("Latitude");
-            longitude = data.getExtras().getDouble("Longitude");
+            String location = data.getExtras().getString(getString(R.string.location));
+            String street = data.getExtras().getString(getString(R.string.StreetUntranslatable));
+            latitude = data.getExtras().getDouble(getString(R.string.latitude));
+            longitude = data.getExtras().getDouble(getString(R.string.longitude));
             TextView tv = (TextView)findViewById(R.id.locationAlarm);
             if(location==null)location="";
             if(street==null)street="";

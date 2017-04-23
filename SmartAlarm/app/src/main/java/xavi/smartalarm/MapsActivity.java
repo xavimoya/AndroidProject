@@ -69,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Address address = addressList.get(0);
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+                mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.marker)));
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                 position = latLng;
 
@@ -98,7 +98,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title(getString(R.string.marker)));
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -132,10 +132,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String locatename = addressList.get(0).getLocality();
             String street = addressList.get(0).getAddressLine(0);
             Intent i = new Intent();
-            i.putExtra("Location",locatename);
-            i. putExtra("Street", street);
-            i.putExtra("Latitude",position.latitude);
-            i.putExtra("Longitude",position.longitude);
+            i.putExtra(getString(R.string.location),locatename);
+            i. putExtra(getString(R.string.street), street);
+            i.putExtra(getString(R.string.latitude),position.latitude);
+            i.putExtra(getString(R.string.longitude),position.longitude);
             setResult(RESULT_LOCATION,i);
             finish();
         } catch (Exception e){
@@ -153,7 +153,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onMapLongClick(LatLng latLng) {
                 mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+                mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.marker)));
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                 position = latLng;
                 List<Address> addressList = null;
@@ -169,7 +169,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Toast.makeText(MapsActivity.this, R.string.location_notfound,Toast.LENGTH_SHORT).show();
                     //  e.printStackTrace();
                 }catch (IndexOutOfBoundsException ioobe){
-                    Toast.makeText(MapsActivity.this, "The pressed location not found, try another",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapsActivity.this, R.string.location_notfound2,Toast.LENGTH_SHORT).show();
                 }
             }
         });

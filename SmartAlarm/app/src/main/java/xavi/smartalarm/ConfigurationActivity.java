@@ -23,7 +23,7 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
-        preferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        preferences = getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE);
 
 
         assert getSupportActionBar() != null;
@@ -34,18 +34,18 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
          sw3 = (Switch)findViewById(R.id.sw3);
         Button btnsave = (Button) findViewById(R.id.saveButton);
         btnsave.setOnClickListener(this);
-        if (preferences.contains("onlyWifi")){
-            if(preferences.getString("onlyWifi","yes").equals("yes")){
+        if (preferences.contains(getString(R.string.onlyWifi))){
+            if(preferences.getString(getString(R.string.onlyWifi),getString(R.string.yes)).equals(getString(R.string.yes))){
                 sw1.setChecked(true);
             }
         }
-        if (preferences.contains("useWeather")){
-            if(preferences.getString("useWeather","yes").equals("yes")){
+        if (preferences.contains(getString(R.string.useWeather))){
+            if(preferences.getString(getString(R.string.useWeather),getString(R.string.yes)).equals(getString(R.string.yes))){
                 sw2.setChecked(true);
             }
         }
-        if (preferences.contains("useTraffic")){
-            if(preferences.getString("useTraffic","yes").equals("yes")){
+        if (preferences.contains(getString(R.string.useTraffic))){
+            if(preferences.getString(getString(R.string.useTraffic),getString(R.string.yes)).equals(getString(R.string.yes))){
                 sw3.setChecked(true);
             }
         }
@@ -69,12 +69,12 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
         switch (v.getId()){
             case R.id.saveButton:
                 SharedPreferences.Editor editor = preferences.edit();
-                if (sw1.isChecked()) editor.putString("onlyWifi","yes");
-                else editor.putString("onlyWifi","no");
-                if (sw2.isChecked()) editor.putString("useWeather","yes");
-                else editor.putString("useWeather","no");
-                if (sw3.isChecked()) editor.putString("useTraffic","yes");
-                else editor.putString("useTraffic","no");
+                if (sw1.isChecked()) editor.putString(getString(R.string.onlyWifi),getString(R.string.yes));
+                else editor.putString(getString(R.string.onlyWifi),getString(R.string.no));
+                if (sw2.isChecked()) editor.putString(getString(R.string.useWeather),getString(R.string.yes));
+                else editor.putString(getString(R.string.useWeather),getString(R.string.no));
+                if (sw3.isChecked()) editor.putString(getString(R.string.useTraffic),getString(R.string.yes));
+                else editor.putString(getString(R.string.useTraffic),getString(R.string.no));
 
                 editor.apply();
 

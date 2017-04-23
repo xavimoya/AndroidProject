@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SmartAlarm</string>
+    <string name="app_name" translatable="false">SmartAlarm</string>
 
     <!-- Status messages -->
     <string name="signed_in_fmt">Signed in as: %s</string>
@@ -13,7 +13,7 @@
     <string name="sign_in">Sign In</string>
     <string name="disconnect">Disconnect</string>
     <string name="exitApp">Exit</string>
-    <string name="email_notsigned">mail@gmail.com</string>
+    <string name="email_notsigned" translatable="false">mail@gmail.com</string>
     <string name="name_notSigned">Sign in to show the profile</string>
     <string name="button_singin">Sign in</string>
     <string name="add_alarm">Add alarm</string>
@@ -24,21 +24,72 @@
     <string name="label_description">Description</string>
     <string name="label_location">Location</string>
     <string name="button_date">Date</string>
-    <string name="dd_mm_yyyy">DD/MM/YYYY</string>
-    <string name="hh_mm">HH:MM</string>
+    <string name="dd_mm_yyyy" translatable="false">DD/MM/YYYY</string>
+    <string name="hh_mm" translatable="false">HH:MM</string>
     <string name="set_your_location">Set your location</string>
     <string name="error_location">Permission revoked. Cannot access to location.</string>
     <string name="location_notfound">The input location not found, try another.</string>
 
     <!-- API KEY -->
     <!-- api key openwheatherMap-->
-    <string name="weatherAPIkey">56ea67b66ab8d74fb18f0958284c324b</string>
-    <string name="urlAPIweather"><![CDATA[http://samples.openweathermap.org/data/2.5/forecast?lat=%2$f&lon=%2$f&appid=]]></string>
+    <string name="weatherAPIkey" translatable="false">56ea67b66ab8d74fb18f0958284c324b</string>
+    <string name="urlAPIweather" translatable="false"><![CDATA[http://samples.openweathermap.org/data/2.5/forecast?lat=%2$f&lon=%2$f&appid=]]></string>
     <string name="problemsSaveLocation">Some problem to save the location.</string>
     <string name="preference_update_wifi">Update only with wi-fi</string>
     <string name="preference_active_weather">Active smartAlarm with weather</string>
     <string name="preference_active_traffic">Active smartAlarm with traffic</string>
     <string name="saveBtn">Save</string>
+    <string name="idTokenGoogle" translatable="false">485221616875-dpruhv4qgev2rnjjihfr3kojsa1fe9hu.apps.googleusercontent.com</string>
+    <string name="preferences" translatable="false">MyPreferences</string>
+    <string name="LogAuthSignedIn" translatable="false">onAuthStateChanged:signed_in:</string>
+    <string name="LogAuthSignedOut" translatable="false">onAuthStateChanged:signed_out</string>
+    <string name="LogCachedSignIn" translatable="false">Got cached sign-in</string>
+    <string name="LogConnFail" translatable="false">onConnectionFailed:</string>
+    <string name="year">Year</string>
+    <string name="month">Month</string>
+    <string name="day">Day</string>
+    <string name="hour">Hour</string>
+    <string name="minute">Minute</string>
+    <string name="title">Title</string>
+    <string name="location">Location</string>
+    <string name="useWeather" translatable="false">useWeather</string>
+    <string name="yes" translatable="false">yes</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="street">Street</string>
+    <string name="ToastAlarmMeteo">For meteorological reasons the alarm will sound before</string>
+    <string name="LogHandleSignIn" translatable="false">handleSignInResult:</string>
+    <string name="LogSigninCredentialCompl" translatable="false">signInWithCredential:onComplete:</string>
+    <string name="LogSignInCredentials" translatable="false">signInWithCredential</string>
+    <string name="ToastAuthFail">Authentication failed.</string>
+    <string name="topicNews" translatable="false">news</string>
+    <string name="LogFailRead" translatable="false">Failed to read value.</string>
+    <string name="exception" translatable="false">Exception</string>
+    <string name="info" translatable="false">info</string>
+    <string name="stop" translatable="false">stop</string>
+    <string name="sound" translatable="false">sound</string>
+    <string name="text" translatable="false">text</string>
+    <string name="UserName" translatable="false">User Name</string>
+    <string name="AlarmsCounterUntranslatable" translatable="false">Alarms_Counter</string>
+    <string name="Alarm_Untranslatable" translatable="false">Alarm_</string>
+    <string name="titleUntranslatable" translatable="false">Title</string>
+    <string name="dateUntranslatable" translatable="false">Date</string>
+    <string name="destinyUntranslatable" translatable="false">Destiny</string>
+    <string name="User_Untranslatable" translatable="false">User_</string>
+    <string name="ToastMoreNecessaryData">You don\'t choose all necessary data</string>
+    <string name="ToastBadCharacter">Title cannot contains \'_\' character</string>
+    <string name="StreetUntranslatable">Street</string>
+    <string name="ToastStopAlarm">Alarm Stopped</string>
+    <string name="alarmActivated">Alarm activated</string>
+    <string name="information">Information</string>
+    <string name="ToastServiceNoIdent">Servicio no identificado</string>
+    <string name="onlyWifi" translatable="false">onlyWifi</string>
+    <string name="no">no</string>
+    <string name="useTraffic" translatable="false">useTraffic</string>
+    <string name="marker">Marker</string>
+    <string name="location_notfound2">The pressed location not found, try another</string>
+    <string name="LogRefreshToken">Refreshed token:</string>
+    <string name="LogNotificationReceived">NOTIFICATION RECEIVED \n Title: %1$s \n Text: %2$s</string>
 
 
 </resources>

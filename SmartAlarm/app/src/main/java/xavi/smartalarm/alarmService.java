@@ -25,7 +25,7 @@ public class alarmService extends Service {
 
 	@Override
 	public void onDestroy() {
-		Toast.makeText(this, "Alarma detenida", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, R.string.ToastStopAlarm, Toast.LENGTH_LONG).show();
         if (player != null) {
             player.stop();
         }
@@ -34,10 +34,10 @@ public class alarmService extends Service {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid) {
-        String str = intent.getExtras().getString("info");
-        textAlarm = intent.getExtras().getString("text");
+        String str = intent.getExtras().getString(getString(R.string.info));
+        textAlarm = intent.getExtras().getString(getString(R.string.text));
         if (str != null) {
-            if (str.equals("sound")) {
+            if (str.equals(getString(R.string.sound))) {
 
                 Context context = getApplicationContext();
 
@@ -47,10 +47,10 @@ public class alarmService extends Service {
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setWhen(System.currentTimeMillis())
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Alarm activated")
+                        .setContentTitle(getString(R.string.alarmActivated))
                         .setContentText(textAlarm)
                         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
-                        .setContentInfo("Information");
+                        .setContentInfo(getString(R.string.information));
 
 
                 player = MediaPlayer.create(context, R.raw.closer);
@@ -65,7 +65,7 @@ public class alarmService extends Service {
             }
 
         } else {
-            Toast.makeText(this, "Servicio no identificado", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.ToastServiceNoIdent, Toast.LENGTH_LONG).show();
         }
         return startid;
     }

@@ -108,7 +108,6 @@ public class WeatherPrevisionAPI extends AsyncTask<String, Void, String> {
         if(minute>4) alarm.setMinute(minute - 5);
         else{
             int hour = alarm.getHour();
-            System.out.println("\n ------------- initial hour: " +hour);
             alarm.setHour(hour-1);
             alarm.setMinute(60-(5-minute));
         }
