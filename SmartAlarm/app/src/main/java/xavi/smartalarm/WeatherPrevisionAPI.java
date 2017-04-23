@@ -5,6 +5,8 @@ package xavi.smartalarm;
  */
 
 import android.os.AsyncTask;
+import android.widget.Toast;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -100,8 +102,16 @@ public class WeatherPrevisionAPI extends AsyncTask<String, Void, String> {
 
     private void editAlarm(){
         //set alarm to 3:20 to test
-       // alarm.setHour(3);
-       // alarm.setMinute(20);
+        //alarm.setHour(3);
+        //alarm.setMinute(20);
+        int minute = alarm.getMinute();
+        if(minute>4) alarm.setMinute(minute - 5);
+        else{
+            int hour = alarm.getHour();
+            System.out.println("\n ------------- initial hour: " +hour);
+            alarm.setHour(hour-1);
+            alarm.setMinute(60-(5-minute));
+        }
         MainActivity.createAlarm(alarm);
     }
 

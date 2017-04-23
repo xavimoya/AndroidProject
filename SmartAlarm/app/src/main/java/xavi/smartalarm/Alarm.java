@@ -46,10 +46,16 @@ class Alarm {
     }
 
     public void setHour(int hour){
+
+
         Calendar cal = Calendar.getInstance();
         cal.setTime(date.getTime());
         cal.set(Calendar.HOUR_OF_DAY, hour);
         this.date.setTime(cal.getTime());
+    }
+
+    public int getHour(){
+         return date.get(Calendar.HOUR_OF_DAY);
     }
 
     public void setMinute(int minute){
@@ -58,6 +64,10 @@ class Alarm {
         cal.set(Calendar.MINUTE, minute);
         this.date.setTime(cal.getTime());
 
+    }
+
+    public int getMinute(){
+        return date.get(Calendar.MINUTE);
     }
 
     public int getHashCode(){

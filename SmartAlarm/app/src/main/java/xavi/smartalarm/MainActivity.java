@@ -298,15 +298,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
            // alarms.add(alarm);
 
            //Task to check weather
-            WeatherPrevisionAPI wpa = new WeatherPrevisionAPI(this, alarm);
+            if(preferences.getString("useWeather","yes").equals("yes")){
+                WeatherPrevisionAPI wpa = new WeatherPrevisionAPI(this, alarm);
 
-            Double latitude = data.getExtras().getDouble("Latitude");
-            Double longitude = data.getExtras().getDouble("Longitude");
-            String url = String.format(getResources().getString(R.string.urlAPIweather),latitude,longitude);
+                Double latitude = data.getExtras().getDouble("Latitude");
+                Double longitude = data.getExtras().getDouble("Longitude");
+                String url = String.format(getResources().getString(R.string.urlAPIweather),latitude,longitude);
 
-            wpa.execute(url+getString(R.string.weatherAPIkey)); //URL of api + location selected
+                wpa.execute(url+getString(R.string.weatherAPIkey)); //URL of api + location selected
 
-            alarm.setDate(date);
+                Toast.makeText(this,"For meteorological reasons the alarm will sound before",Toast.LENGTH_SHORT).show();
+
+            }else{
+                createAlarm(alarm);
+            }
+
+
+
+           // alarm.setDate(date);
 
             //Add alarm after check weather prevision
         /*    alarms.add(alarm);
@@ -316,6 +325,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 */
             //Tendriamos que usar el switch
+            //Makes alarms sound
             startAlarm(true, alarm); //Valor del switch
 
 
@@ -624,7 +634,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                                     }
                                     Alarm a = new Alarm(cal,title,dest);
                                     a.setHashcode(Integer.parseInt(snapshot.getKey().substring(6)));
-                                    if (!alarms.contains(a)) alarms.add(a);  //createAlarm(a);
+                                    if (!alarms.contains(a)) alarms.add(a); 
                                 }
 
                                 @Override
@@ -660,8 +670,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //For all references
         DatabaseReference alarmRef = database.getReference("User_" + userID);
         alarmRef.removeValue();
-        for(Alarm a : alarms){
-            alarms.remove(a);
+        for(int i=0; i<alarms.size();i++){
+            alarms.remove(i);
         }
         adapterAlarm.notifyDataSetChanged(); //Notify changes
     }
