@@ -1,10 +1,10 @@
 package xavi.smartalarm;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+
 /**
  * Created by Xavi and Reylin on 13/03/2017.
  */
@@ -28,9 +29,10 @@ public class AddAlarm extends AppCompatActivity {
 
     private static final int RESULT_LOCATION = 101;
 
+    public static TextView tvTime;
+
     private TimePicker timePicker;
     private TextView title;
-    private Button button_save, button_date, button_location;
 
     private DatePickerDialog datePickerDialog;
     private TimePickerFragment timePickerFragment;
@@ -57,13 +59,13 @@ public class AddAlarm extends AppCompatActivity {
         if(Build.VERSION.SDK_INT < 23){
             timePickerFragment = new TimePickerFragment();
             Button b = (Button)findViewById(R.id.button_time);
+            tvTime = (TextView) findViewById(R.id.timeAlarm);
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     timePickerFragment.show(getSupportFragmentManager(), "timePicker");
                 }
             });
-         //   timePickerFragment.
         }else{
             timePicker = (TimePicker) findViewById(R.id.timePicker);
             timePicker.setIs24HourView(true);
@@ -71,7 +73,7 @@ public class AddAlarm extends AppCompatActivity {
 
 
         title = (EditText) findViewById(R.id.textView_title);
-        button_save = (Button) findViewById(R.id.button_set);
+        Button button_save = (Button) findViewById(R.id.button_set);
 
 
 
@@ -117,7 +119,7 @@ public class AddAlarm extends AppCompatActivity {
 
 
         /*Date*/
-        button_date = (Button) findViewById(R.id.button_date);
+        Button button_date = (Button) findViewById(R.id.button_date);
         button_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,7 +148,7 @@ public class AddAlarm extends AppCompatActivity {
         });
 
         //Location
-        button_location = (Button) findViewById(R.id.button_location);
+        Button button_location = (Button) findViewById(R.id.button_location);
         button_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,7 +206,7 @@ public class AddAlarm extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         TextView tvDate = (TextView) findViewById(R.id.dateAlarm);
-        TextView tv = (TextView)findViewById(R.id.locationAlarm);
+        TextView tv = (TextView) findViewById(R.id.locationAlarm);
         tvDate.setText(savedInstanceState.getString(getString(R.string.DATE)));
         tv.setText(savedInstanceState.getString(getString(R.string.LOCATION)));
 
@@ -215,5 +217,6 @@ public class AddAlarm extends AppCompatActivity {
         longitude = savedInstanceState.getDouble(getString(R.string.longitude));
 
     }
+
 
 }

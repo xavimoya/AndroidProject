@@ -308,19 +308,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
            // alarms.add(alarm);
 
            //Task to check weather
-            if(preferences.getString(getString(R.string.useWeather),getString(R.string.yes)).equals(getString(R.string.yes))){
-                WeatherPrevisionAPI wpa = new WeatherPrevisionAPI(this, alarm);
+            if (preferences.contains(getString(R.string.useWeather))){
+                if(preferences.getString(getString(R.string.useWeather),getString(R.string.yes)).equals(getString(R.string.yes))){
+                    WeatherPrevisionAPI wpa = new WeatherPrevisionAPI(this, alarm);
 
-                Double latitude = data.getExtras().getDouble(getString(R.string.latitude));
-                Double longitude = data.getExtras().getDouble(getString(R.string.longitude));
-                String url = String.format(getResources().getString(R.string.urlAPIweather),latitude,longitude);
+                    Double latitude = data.getExtras().getDouble(getString(R.string.latitude));
+                    Double longitude = data.getExtras().getDouble(getString(R.string.longitude));
+                    String url = String.format(getResources().getString(R.string.urlAPIweather),latitude,longitude);
 
-                wpa.execute(url+getString(R.string.weatherAPIkey)); //URL of api + location selected
+                    wpa.execute(url+getString(R.string.weatherAPIkey)); //URL of api + location selected
 
-                Toast.makeText(this, R.string.ToastAlarmMeteo,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.ToastAlarmMeteo,Toast.LENGTH_SHORT).show();
 
-            }else{
-                createAlarm(alarm);
+                }else{
+                    createAlarm(alarm);
+                }
             }
             //Falta un IF per al transit
 

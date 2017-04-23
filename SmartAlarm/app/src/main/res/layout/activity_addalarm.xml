@@ -20,7 +20,6 @@
             android:text="@string/label_title"
             android:textColor="#FFFFFF"
             android:labelFor="@+id/title"
-            android:layout_below="@+id/timePicker"
             />
 
         <EditText
@@ -141,7 +140,7 @@
             android:layout_height="wrap_content"
             android:text="@string/button_save"
             android:gravity="center_horizontal"
-            android:layout_below="@+id/layout_date"
+            android:layout_below="@+id/layout_time"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"
             />
