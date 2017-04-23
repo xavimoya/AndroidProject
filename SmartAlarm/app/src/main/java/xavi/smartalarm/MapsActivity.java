@@ -59,7 +59,10 @@ public class MapsActivity extends FragmentActivity {
                     if(street==null)street="";
                     editText.setText(location + ", " +street);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Toast.makeText(MapsActivity.this, R.string.location_notfound,Toast.LENGTH_SHORT).show();
+                    //  e.printStackTrace();
+                }catch (IndexOutOfBoundsException ioobe){
+                    Toast.makeText(MapsActivity.this, "The pressed location not found, try another",Toast.LENGTH_SHORT).show();
                 }
 
             }

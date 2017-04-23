@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,6 +31,9 @@ class CustomAlarmAdapter extends ArrayAdapter<Alarm>{
         TextView time = (TextView) customView.findViewById(R.id.text_time);
         TextView date = (TextView) customView.findViewById(R.id.text_date);
         TextView location = (TextView) customView.findViewById(R.id.text_location);
+
+        Switch sw = (Switch)customView.findViewById(R.id.switch1);
+        sw.setChecked(true);
 
 
 

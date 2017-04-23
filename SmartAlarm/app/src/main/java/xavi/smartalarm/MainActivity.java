@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu24);
 
-        preferences = getSharedPreferences("MyPreferences",MODE_PRIVATE);
+        preferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
 
         alarms = new ArrayList<>();
         listView = (ListView) findViewById(R.id.listView_alarms);
@@ -634,7 +634,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                                     }
                                     Alarm a = new Alarm(cal,title,dest);
                                     a.setHashcode(Integer.parseInt(snapshot.getKey().substring(6)));
-                                    if (!alarms.contains(a)) alarms.add(a); 
+                                    if (!alarms.contains(a)) alarms.add(a);
                                 }
 
                                 @Override
@@ -670,9 +670,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //For all references
         DatabaseReference alarmRef = database.getReference("User_" + userID);
         alarmRef.removeValue();
-        for(int i=0; i<alarms.size();i++){
+      /*  for(int i=0; i<alarms.size();i++){
             alarms.remove(i);
-        }
+        }*/
+        alarms.clear();
         adapterAlarm.notifyDataSetChanged(); //Notify changes
     }
 
