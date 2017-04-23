@@ -45,18 +45,18 @@
     <string name="LogAuthSignedOut" translatable="false">onAuthStateChanged:signed_out</string>
     <string name="LogCachedSignIn" translatable="false">Got cached sign-in</string>
     <string name="LogConnFail" translatable="false">onConnectionFailed:</string>
-    <string name="year">Year</string>
-    <string name="month">Month</string>
-    <string name="day">Day</string>
-    <string name="hour">Hour</string>
-    <string name="minute">Minute</string>
-    <string name="title">Title</string>
-    <string name="location">Location</string>
+    <string name="year" translatable="false">Year</string>
+    <string name="month" translatable="false">Month</string>
+    <string name="day" translatable="false">Day</string>
+    <string name="hour" translatable="false">Hour</string>
+    <string name="minute" translatable="false">Minute</string>
+    <string name="title" translatable="false">Title</string>
+    <string name="location" translatable="false">Location</string>
     <string name="useWeather" translatable="false">useWeather</string>
     <string name="yes" translatable="false">yes</string>
-    <string name="latitude">Latitude</string>
-    <string name="longitude">Longitude</string>
-    <string name="street">Street</string>
+    <string name="latitude" translatable="false">Latitude</string>
+    <string name="longitude" translatable="false">Longitude</string>
+    <string name="street" translatable="false">Street</string>
     <string name="ToastAlarmMeteo">For meteorological reasons the alarm will sound before</string>
     <string name="LogHandleSignIn" translatable="false">handleSignInResult:</string>
     <string name="LogSigninCredentialCompl" translatable="false">signInWithCredential:onComplete:</string>
@@ -84,9 +84,9 @@
     <string name="information">Information</string>
     <string name="ToastServiceNoIdent">Servicio no identificado</string>
     <string name="onlyWifi" translatable="false">onlyWifi</string>
-    <string name="no">no</string>
+    <string name="no" translatable="false">no</string>
     <string name="useTraffic" translatable="false">useTraffic</string>
-    <string name="marker">Marker</string>
+    <string name="marker" translatable="false">Marker</string>
     <string name="location_notfound2">The pressed location not found, try another</string>
     <string name="LogRefreshToken">Refreshed token:</string>
     <string name="LogNotificationReceived">NOTIFICATION RECEIVED \n Title: %1$s \n Text: %2$s</string>
@@ -95,6 +95,8 @@
     <string name="btn_search">Search</string>
     <string name="btn_map_type">Map Type</string>
     <string name="btn_location">location</string>
+    <string name="DATE" translatable="false">DATE</string>
+    <string name="LOCATION" translatable="false">LOCATION</string>
 
 
 </resources>

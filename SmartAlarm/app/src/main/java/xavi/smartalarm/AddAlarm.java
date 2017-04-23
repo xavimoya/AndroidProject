@@ -160,4 +160,37 @@ public class AddAlarm extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        TextView tvDate = (TextView) findViewById(R.id.dateAlarm);
+        TextView tv = (TextView)findViewById(R.id.locationAlarm);
+        state.putString(getString(R.string.DATE),tvDate.getText().toString());
+        state.putString(getString(R.string.LOCATION),tv.getText().toString());
+
+        state.putInt(getString(R.string.day), iday);
+        state.putInt(getString(R.string.month), imonth);
+        state.putInt(getString(R.string.year), iyear);
+        if(latitude!=null) state.putDouble(getString(R.string.latitude),latitude);
+        if(longitude!=null) state.putDouble(getString(R.string.longitude),longitude);
+
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        TextView tvDate = (TextView) findViewById(R.id.dateAlarm);
+        TextView tv = (TextView)findViewById(R.id.locationAlarm);
+        tvDate.setText(savedInstanceState.getString(getString(R.string.DATE)));
+        tv.setText(savedInstanceState.getString(getString(R.string.LOCATION)));
+
+        iday = savedInstanceState.getInt(getString(R.string.day));
+        imonth = savedInstanceState.getInt(getString(R.string.month));
+        iyear = savedInstanceState.getInt(getString(R.string.year));
+        latitude = savedInstanceState.getDouble(getString(R.string.latitude));
+        longitude = savedInstanceState.getDouble(getString(R.string.longitude));
+
+    }
+
 }

@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private DrawerLayout drawer;
     private Menu menu;
     private Drawable imageD;
-    private String userID;
+    private String userID=null;
     private static final int RESULT_ADDALARM = 100;
     private SharedPreferences preferences;
     ListView listView;
@@ -107,6 +108,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         listView = (ListView) findViewById(R.id.listView_alarms);
         adapterAlarm = new CustomAlarmAdapter(this, alarms);
         listView.setAdapter(adapterAlarm);
+        listView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                listView.refreshDrawableState();
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                return true;
+            }
+        });
 
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -168,8 +182,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         };
 
-
         database = FirebaseDatabase.getInstance();
+
 
 
         intent = new Intent(MainActivity.this, AlarmNotification.class);
@@ -352,6 +366,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
             //Get alarms stored in database
             restoreAlarmsOfDatabase();
+
 
             updateUI(true);
         } else {
@@ -613,7 +628,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                                     }
                                     Alarm a = new Alarm(cal,title,dest);
                                     a.setHashcode(Integer.parseInt(snapshot.getKey().substring(6)));
-                                    if (!alarms.contains(a)) alarms.add(a);
+                                   // if (!alarms.contains(a)){
+                                    if (alarmNotInAlarms(a)){
+                                        alarms.add(a);
+                                        adapterAlarm.notifyDataSetChanged();
+                                    }
+
                                 }
 
                                 @Override
@@ -639,9 +659,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //
 
 
-        adapterAlarm.notifyDataSetChanged(); //Notify changes
+    }
 
+    private boolean alarmNotInAlarms(Alarm a) {
+        for(Alarm alarm : alarms){
+            if (alarm.getHashCode() == a.getHashCode()) return false;
 
+        }
+        return true;
     }
 
 
@@ -649,9 +674,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //For all references
         DatabaseReference alarmRef = database.getReference(getString(R.string.User_Untranslatable) + userID);
         alarmRef.removeValue();
-      /*  for(int i=0; i<alarms.size();i++){
-            alarms.remove(i);
-        }*/
         alarms.clear();
         adapterAlarm.notifyDataSetChanged(); //Notify changes
     }
@@ -660,11 +682,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
+        state.putString("USER",userID);
+
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        userID = savedInstanceState.getString("USER");
+        restoreAlarmsOfDatabase();
     }
 
     private void setAlarm(Alarm alarm){
