@@ -90,6 +90,11 @@
     <string name="location_notfound2">The pressed location not found, try another</string>
     <string name="LogRefreshToken">Refreshed token:</string>
     <string name="LogNotificationReceived">NOTIFICATION RECEIVED \n Title: %1$s \n Text: %2$s</string>
+    <string name="save_locationbtn">Save Location</string>
+    <string name="btn_enter_your_destiny">Enter your destiny</string>
+    <string name="btn_search">Search</string>
+    <string name="btn_map_type">Map Type</string>
+    <string name="btn_location">location</string>
 
 
 </resources>

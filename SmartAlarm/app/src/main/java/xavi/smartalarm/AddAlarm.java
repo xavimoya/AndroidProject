@@ -112,7 +112,7 @@ public class AddAlarm extends AppCompatActivity {
 
 
                                 TextView tvDate = (TextView) findViewById(R.id.dateAlarm);
-                                tvDate.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
+                                tvDate.setText(dayOfMonth + "/" + (monthOfYear+1) + "/" + year);
                                 iday = dayOfMonth;
                                 imonth = monthOfYear;
                                 iyear = year;

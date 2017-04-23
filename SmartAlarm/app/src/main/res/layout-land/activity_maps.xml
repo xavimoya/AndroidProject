@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:background="@color/colorGreen1">
 
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="5dp">
 
 
@@ -22,21 +22,23 @@ android:orientation="vertical"
             android:textColor="#FFF"
             android:textColorHint="#a4a4a4" />
 
+
         <LinearLayout
             android:id="@+id/layoutButtons1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/TFaddress"
+            android:layout_below="@+id/TFaddress"
+            android:layout_centerHorizontal="true"
 
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/Bsearch"
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
                 android:onClick="onSearch"
+                android:layout_gravity="center"
                 android:text="@string/btn_search" />
 
             <Button
@@ -44,7 +46,7 @@ android:orientation="vertical"
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="center"
                 android:nestedScrollingEnabled="false"
                 android:onClick="changeType"
                 android:text="@string/btn_map_type" />
@@ -55,8 +57,9 @@ android:orientation="vertical"
             android:id="@+id/layoutButtons2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:orientation="vertical">
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/layoutButtons1"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/Bzoomin"
@@ -76,27 +79,28 @@ android:orientation="vertical"
 
         </LinearLayout>
 
+
         <Button
             android:id="@+id/ButtonSave"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/TFaddress"
-            android:text="@string/save_locationbtn"
+            android:layout_below="@id/layoutButtons2"
             android:onClick="onSaveLocation"
-            />
+            android:layout_centerHorizontal="true"
+            android:text="@string/save_locationbtn" />
 
     </RelativeLayout>
 
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:id="@+id/map" tools:context=".MapsActivity"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+            android:layout_height="match_parent" android:id="@+id/map" tools:context=".MapsActivity"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
 
-</LinearLayout>
+    </LinearLayout>
 </LinearLayout>
