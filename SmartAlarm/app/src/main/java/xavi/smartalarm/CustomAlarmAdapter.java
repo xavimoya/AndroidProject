@@ -1,6 +1,7 @@
 package xavi.smartalarm;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-/**
+/*
  * Created by Xavi and Reylin on 14/03/2017.
  */
 
@@ -22,7 +23,7 @@ class CustomAlarmAdapter extends ArrayAdapter<Alarm>{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         LayoutInflater alarmsInflater = LayoutInflater.from(getContext());
         View customView = alarmsInflater.inflate(R.layout.custome_row, parent, false);
 
@@ -36,12 +37,12 @@ class CustomAlarmAdapter extends ArrayAdapter<Alarm>{
         sw.setChecked(true);
 
 
-
+        assert alarm != null;
         alarmTextView.setText(alarm.getTitle());
 
         int minutes = alarm.getDate().get(Calendar.MINUTE);
         int hours = alarm.getDate().get(Calendar.HOUR_OF_DAY);
-        String text = "";
+        String text;
         if (hours<10)text="0"+hours + ":";
         else text = hours+":";
         if (minutes < 10)text = text + ("0"+minutes);

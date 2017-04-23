@@ -1,6 +1,6 @@
 package xavi.smartalarm;
 
-/**
+/*
  * Created by Xavi on 23/4/17.
  */
 

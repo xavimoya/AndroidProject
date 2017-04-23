@@ -2,7 +2,7 @@ package xavi.smartalarm;
 
 import java.util.Calendar;
 
-/**
+/*
  * Created by Xavi and Reylin on 14/03/2017.
  */
 

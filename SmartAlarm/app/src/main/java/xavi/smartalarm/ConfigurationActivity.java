@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
 
-/**
+/*
  * Created by Xavi on 21/4/17.
  */
 

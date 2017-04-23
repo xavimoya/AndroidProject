@@ -59,7 +59,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
+/*
  * Created by Xavi and Reylin on 4/3/17.
  *
  */
@@ -308,7 +308,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
            // alarms.add(alarm);
 
            //Task to check weather
-            if (preferences.contains(getString(R.string.useWeather))){
                 if(preferences.getString(getString(R.string.useWeather),getString(R.string.yes)).equals(getString(R.string.yes))){
                     WeatherPrevisionAPI wpa = new WeatherPrevisionAPI(this, alarm);
 
@@ -323,7 +322,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 }else{
                     createAlarm(alarm);
                 }
-            }
             //Falta un IF per al transit
 
             //Tendriamos que usar el switch
@@ -340,6 +338,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
 
+            assert acct != null;
             AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
             mAuth.signInWithCredential(credential)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -358,7 +357,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         }
                     });
 
-            assert acct != null;
             userID = acct.getId();
             name.setText(acct.getDisplayName());
             email.setText(acct.getEmail());
@@ -475,9 +473,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
 
         private Bitmap DownloadImageFromPath(String path) {
-            InputStream in = null;
+            InputStream in;
             Bitmap bmp = null;
-            int responseCode = -1;
+            int responseCode;
             try {
 
                 URL url = new URL(path);

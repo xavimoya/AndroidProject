@@ -5,13 +5,11 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
-import java.util.Date;
 
-/**
+/*
  * Created by Xavi on 23/4/17.
  */
 

@@ -1,6 +1,6 @@
 package xavi.smartalarm;
 
-/**
+/*
  * Created by Xavi on 22/3/17.
  */
 
@@ -55,7 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         EditText location_tf = (EditText) findViewById(R.id.TFaddress);
         String location = location_tf.getText().toString();
         List<Address> addressList = null;
-        if (location != null && !location.equals("")) {
+        if (!location.equals("")) {
             Geocoder geocoder = new Geocoder(this);
             try {
                 addressList = geocoder.getFromLocationName(location, 1);
@@ -156,7 +156,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.marker)));
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                 position = latLng;
-                List<Address> addressList = null;
+                List<Address> addressList;
                 try {
                     addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude,1);
                     String location,street;

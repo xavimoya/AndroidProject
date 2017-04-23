@@ -1,11 +1,11 @@
 package xavi.smartalarm;
 
-/**
+/*
  * Created by Xavi on 23/3/17.
+ *
  */
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -18,7 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 
-public class WeatherPrevisionAPI extends AsyncTask<String, Void, String> {
+class WeatherPrevisionAPI extends AsyncTask<String, Void, String> {
     private final MainActivity MainActivity;
     private  Alarm alarm;
 
@@ -27,7 +27,7 @@ public class WeatherPrevisionAPI extends AsyncTask<String, Void, String> {
 // on the screen
 
 
-    public WeatherPrevisionAPI(MainActivity MainActivity, Alarm alarm) {
+    WeatherPrevisionAPI(MainActivity MainActivity, Alarm alarm) {
         this.MainActivity = MainActivity;
         this.alarm = alarm;
     }
@@ -57,7 +57,7 @@ public class WeatherPrevisionAPI extends AsyncTask<String, Void, String> {
                 InputStream content = execute.getEntity().getContent();
 
                 BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-                String s = "";
+                String s;
 
 // populate the response string which will be passed later into the post execution
                 while ((s = buffer.readLine()) != null) {
@@ -101,9 +101,8 @@ public class WeatherPrevisionAPI extends AsyncTask<String, Void, String> {
     }
 
     private void editAlarm(){
-        //set alarm to 3:20 to test
-        //alarm.setHour(3);
-        //alarm.setMinute(20);
+
+        //5 minutes before
         int minute = alarm.getMinute();
         if(minute>4) alarm.setMinute(minute - 5);
         else{

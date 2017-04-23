@@ -1,6 +1,5 @@
 package xavi.smartalarm;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -19,7 +18,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 
-/**
+/*
  * Created by Xavi and Reylin on 13/03/2017.
  */
 
