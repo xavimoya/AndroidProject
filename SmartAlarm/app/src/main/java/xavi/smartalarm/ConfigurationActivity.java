@@ -3,7 +3,6 @@ package xavi.smartalarm;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +13,7 @@ import android.widget.Switch;
  */
 
 
-class ConfigurationActivity extends AppCompatActivity implements View.OnClickListener{
+public class ConfigurationActivity extends AppCompatActivity implements View.OnClickListener{
 
 
     private static SharedPreferences preferences;
@@ -50,8 +49,6 @@ class ConfigurationActivity extends AppCompatActivity implements View.OnClickLis
                 sw3.setChecked(true);
             }
         }
-
-
 
 
     }

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -26,7 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int RESULT_LOCATION = 101;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -37,42 +38,16 @@ public class MapsActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        setUpMapIfNeeded();
+        SupportMapFragment mf = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
+        mf.getMapAsync(this);
 
         editText = (EditText) findViewById(R.id.TFaddress);
-        final Geocoder geocoder = new Geocoder(this);
 
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                position = latLng;
-                List<Address> addressList = null;
-                try {
-                    addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude,1);
-                    String location,street;
-                    location = addressList.get(0).getLocality();
-                    street = addressList.get(0).getAddressLine(0);
-                    if(location==null)location="";
-                    if(street==null)street="";
-                    editText.setText(location + ", " +street);
-                } catch (IOException e) {
-                    Toast.makeText(MapsActivity.this, R.string.location_notfound,Toast.LENGTH_SHORT).show();
-                    //  e.printStackTrace();
-                }catch (IndexOutOfBoundsException ioobe){
-                    Toast.makeText(MapsActivity.this, "The pressed location not found, try another",Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setUpMapIfNeeded();
     }
 
 
@@ -122,19 +97,6 @@ public class MapsActivity extends FragmentActivity {
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
-    private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
-            // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                setUpMap();
-            }
-        }
-    }
-
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -155,13 +117,6 @@ public class MapsActivity extends FragmentActivity {
                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                         1);
             }
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         mMap.setMyLocationEnabled(true);
@@ -189,5 +144,36 @@ public class MapsActivity extends FragmentActivity {
         }
     }
 
-
+    @Override
+    public void onMapReady(GoogleMap map) {
+        mMap = map;
+        setUpMap();
+        final Geocoder geocoder = new Geocoder(this);
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                position = latLng;
+                List<Address> addressList = null;
+                try {
+                    addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude,1);
+                    String location,street;
+                    location = addressList.get(0).getLocality();
+                    street = addressList.get(0).getAddressLine(0);
+                    if(location==null)location="";
+                    if(street==null)street="";
+                    editText.setText(location + ", " +street);
+                } catch (IOException e) {
+                    Toast.makeText(MapsActivity.this, R.string.location_notfound,Toast.LENGTH_SHORT).show();
+                    //  e.printStackTrace();
+                }catch (IndexOutOfBoundsException ioobe){
+                    Toast.makeText(MapsActivity.this, "The pressed location not found, try another",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 }
+
+

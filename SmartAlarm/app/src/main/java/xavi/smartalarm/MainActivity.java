@@ -50,6 +50,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -312,18 +313,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }else{
                 createAlarm(alarm);
             }
+            //Falta un IF per al transit
 
-
-
-           // alarm.setDate(date);
-
-            //Add alarm after check weather prevision
-        /*    alarms.add(alarm);
-
-            adapterAlarm.notifyDataSetChanged(); //Notify that the listview has changes
-
-
-*/
             //Tendriamos que usar el switch
             //Makes alarms sound
             startAlarm(true, alarm); //Valor del switch
@@ -350,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                                 Toast.makeText(MainActivity.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
                             }else{
-
+                                FirebaseMessaging.getInstance().subscribeToTopic("news");
 
                             }
                         }
