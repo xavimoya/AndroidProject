@@ -57,7 +57,7 @@
     <string name="latitude" translatable="false">Latitude</string>
     <string name="longitude" translatable="false">Longitude</string>
     <string name="street" translatable="false">Street</string>
-    <string name="ToastAlarmMeteo">For meteorological reasons the alarm will sound before</string>
+    <string name="ToastAlarmMeteo">For meteorological reasons (%1$s) the alarm will sound %2$d minutes before</string>
     <string name="LogHandleSignIn" translatable="false">handleSignInResult:</string>
     <string name="LogSigninCredentialCompl" translatable="false">signInWithCredential:onComplete:</string>
     <string name="LogSignInCredentials" translatable="false">signInWithCredential</string>
