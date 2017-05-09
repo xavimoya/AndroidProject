@@ -34,12 +34,19 @@
     <!-- api key openwheatherMap-->
     <string name="weatherAPIkey" translatable="false">56ea67b66ab8d74fb18f0958284c324b</string>
     <string name="urlAPIweather" translatable="false"><![CDATA[http://samples.openweathermap.org/data/2.5/forecast?lat=%2$f&lon=%2$f&appid=]]></string>
+    <!-- api key google maps distance matrix -->
+    <string name="urlAPItraffic" translatable="false">https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&amp;origins=%1$s&amp;destinations=%2$s&amp;key=</string>
+    <string name="GoogleDistanceMatrixAPI">AIzaSyC_-R48BiDpqlqIxhtcNOrflacd87Mn4L8</string>
+
+    <!-- Id Google token -->
+    <string name="idTokenGoogle" translatable="false">485221616875-dpruhv4qgev2rnjjihfr3kojsa1fe9hu.apps.googleusercontent.com</string>
+
+    <!-- Info -->
     <string name="problemsSaveLocation">Some problem to save the location.</string>
     <string name="preference_update_wifi">Update only with wi-fi</string>
     <string name="preference_active_weather">Active smartAlarm with weather</string>
     <string name="preference_active_traffic">Active smartAlarm with traffic</string>
     <string name="saveBtn">Save</string>
-    <string name="idTokenGoogle" translatable="false">485221616875-dpruhv4qgev2rnjjihfr3kojsa1fe9hu.apps.googleusercontent.com</string>
     <string name="preferences" translatable="false">MyPreferences</string>
     <string name="LogAuthSignedIn" translatable="false">onAuthStateChanged:signed_in:</string>
     <string name="LogAuthSignedOut" translatable="false">onAuthStateChanged:signed_out</string>
@@ -58,6 +65,7 @@
     <string name="longitude" translatable="false">Longitude</string>
     <string name="street" translatable="false">Street</string>
     <string name="ToastAlarmMeteo">For meteorological reasons (%1$s) the alarm will sound %2$d minutes before</string>
+    <string name="ToastAlarmTraffic">For Traffic reasons the alarm will sound %1$d minutes before</string>
     <string name="LogHandleSignIn" translatable="false">handleSignInResult:</string>
     <string name="LogSigninCredentialCompl" translatable="false">signInWithCredential:onComplete:</string>
     <string name="LogSignInCredentials" translatable="false">signInWithCredential</string>
@@ -97,6 +105,7 @@
     <string name="btn_location">location</string>
     <string name="DATE" translatable="false">DATE</string>
     <string name="LOCATION" translatable="false">LOCATION</string>
+    <string name="ToastAlarmNoTraffic">Traffic not change the alarm because the state is %1$s</string>
 
 
 </resources>

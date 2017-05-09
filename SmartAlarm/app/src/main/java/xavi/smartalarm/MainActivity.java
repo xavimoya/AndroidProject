@@ -1,17 +1,22 @@
 package xavi.smartalarm;
 
+import android.*;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +43,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -65,7 +72,7 @@ import java.util.Date;
  */
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener,
-        NavigationView.OnNavigationItemSelectedListener, ValueEventListener{
+        NavigationView.OnNavigationItemSelectedListener, ValueEventListener {
 
     private GoogleApiClient mGoogleApiClient;
     private final int RC_SIGN_IN = 9001;
@@ -76,14 +83,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private DrawerLayout drawer;
     private Menu menu;
     private Drawable imageD;
-    private String userID=null;
+    private String userID = null;
     private static final int RESULT_ADDALARM = 100;
     private SharedPreferences preferences;
     ListView listView;
     ArrayList<Alarm> alarms;
     ArrayAdapter<Alarm> adapterAlarm;
     AlarmManager alarmManager;
-    private MenuItem i,i2;
+    private MenuItem i, i2;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private Intent intent;
@@ -144,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         imageD = imageView.getDrawable();
 
 
-
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -157,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .addApi(LocationServices.API)
                 .build();
 
         //Customize the SignIn button
@@ -183,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         };
 
         database = FirebaseDatabase.getInstance();
-
 
 
         intent = new Intent(MainActivity.this, AlarmNotification.class);
@@ -222,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     @Override
-    public void onRestart(){
+    public void onRestart() {
 
         super.onRestart();
 
@@ -276,7 +282,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -287,41 +292,72 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             handleSignInResult(result);
         }
         //Result returned of create alarm
-        else if(requestCode == resultCode && resultCode == RESULT_ADDALARM){
+        else if (requestCode == resultCode && resultCode == RESULT_ADDALARM) {
             //Result of AddAlarm
             //data is the new alarm configured
             Calendar date = Calendar.getInstance();
 
             //year, month, day, hour, minute
 
-            date.set(data.getIntExtra(getString(R.string.year),0),
-                    data.getIntExtra(getString(R.string.month),0),
-                    data.getIntExtra(getString(R.string.day),0),
-                    data.getIntExtra(getString(R.string.hour),0),
-                    data.getIntExtra(getString(R.string.minute),0),
+            date.set(data.getIntExtra(getString(R.string.year), 0),
+                    data.getIntExtra(getString(R.string.month), 0),
+                    data.getIntExtra(getString(R.string.day), 0),
+                    data.getIntExtra(getString(R.string.hour), 0),
+                    data.getIntExtra(getString(R.string.minute), 0),
                     0);  //seconds
 
-            Alarm alarm = new Alarm(date,data.getExtras().getString(getString(R.string.title)), data.getExtras().getString(getString(R.string.location)));
+            Alarm alarm = new Alarm(date, data.getExtras().getString(getString(R.string.title)), data.getExtras().getString(getString(R.string.location)));
 
             //not add yet
-           // alarms.add(alarm);
+            // alarms.add(alarm);
 
-           //Task to check weather
-            if(preferences.getString(getString(R.string.useWeather),getString(R.string.yes)).equals(getString(R.string.yes))){
+            //Task to check weather
+            if (preferences.getString(getString(R.string.useWeather), getString(R.string.yes)).equals(getString(R.string.yes)) &&
+                    preferences.getString(getString(R.string.useTraffic), getString(R.string.yes)).equals(getString(R.string.yes))) {
+
+
+                createAlarm(alarm);
+
+            } else if (preferences.getString(getString(R.string.useWeather), getString(R.string.yes)).equals(getString(R.string.yes))) {
+
                 WeatherPrevisionAPI wpa = new WeatherPrevisionAPI(this, alarm);
 
                 Double latitude = data.getExtras().getDouble(getString(R.string.latitude));
                 Double longitude = data.getExtras().getDouble(getString(R.string.longitude));
-                String url = String.format(getResources().getString(R.string.urlAPIweather),latitude,longitude);
-                 wpa.execute(url+getString(R.string.weatherAPIkey)); //URL of api + location selected
+                String url = String.format(getResources().getString(R.string.urlAPIweather), latitude, longitude);
+                wpa.execute(url + getString(R.string.weatherAPIkey)); //URL of api + location selected
+
+            } else if (preferences.getString(getString(R.string.useTraffic), getString(R.string.yes)).equals(getString(R.string.yes))) {
+                //Get latitude and longitude of destiny
+                Double destLatitude = data.getExtras().getDouble(getString(R.string.latitude));
+                Double destLongitude = data.getExtras().getDouble(getString(R.string.longitude));
+                String dest = destLatitude + "," + destLongitude;
+
+                //Get latitude and longitude of origin
+                LocationManager mLocationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+                boolean isGPSEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},1);
+                }
+                Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                if (location == null) location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (location == null) location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+
+                String origin= location.getLatitude()+","+location.getLongitude();
+
+                //Makes url to get JSON from Google API (distance matrix api)
+                String url = String.format(getResources().getString(R.string.urlAPItraffic),origin,dest);
+                String key = getString(R.string.GoogleDistanceMatrixAPI);
+
+                TrafficTimeAPI tta = new TrafficTimeAPI(this,alarm);
+                tta.execute(url+key);
 
             }else{
+                //Create the alarm regardless of preferences (because all is deactivated)
                 createAlarm(alarm);
             }
-            if(preferences.getString(getString(R.string.useTraffic),getString(R.string.yes)).equals(getString(R.string.yes))){
 
-            }
-            //Falta un IF per al transit
 
             //Tendriamos que usar el switch
             //Makes alarms sound
