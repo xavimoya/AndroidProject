@@ -347,7 +347,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 String origin= location.getLatitude()+","+location.getLongitude();
 
                 //Makes url to get JSON from Google API (distance matrix api)
-                String url = String.format(getResources().getString(R.string.urlAPItraffic),origin,dest);
+                String mode = "driving";    //by default
+                String url = String.format(getResources().getString(R.string.urlAPItraffic),origin,dest,mode);
                 String key = getString(R.string.GoogleDistanceMatrixAPI);
 
                 TrafficTimeAPI tta = new TrafficTimeAPI(this,alarm);

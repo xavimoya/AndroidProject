@@ -35,7 +35,7 @@
     <string name="weatherAPIkey" translatable="false">56ea67b66ab8d74fb18f0958284c324b</string>
     <string name="urlAPIweather" translatable="false"><![CDATA[http://samples.openweathermap.org/data/2.5/forecast?lat=%2$f&lon=%2$f&appid=]]></string>
     <!-- api key google maps distance matrix -->
-    <string name="urlAPItraffic" translatable="false">https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&amp;origins=%1$s&amp;destinations=%2$s&amp;key=</string>
+    <string name="urlAPItraffic" translatable="false">https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&amp;origins=%1$s&amp;destinations=%2$s&amp;mode=%3$s&amp;key=</string>
     <string name="GoogleDistanceMatrixAPI">AIzaSyC_-R48BiDpqlqIxhtcNOrflacd87Mn4L8</string>
 
     <!-- Id Google token -->
