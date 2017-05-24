@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private Intent intent;
+    private boolean useFirebase = true;
 
     private FirebaseAuth mAuth;
 
@@ -110,6 +111,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu24);
 
         preferences = getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE);
+
+        if(preferences.getString(getString(R.string.useFirebase), getString(R.string.yes)).equals(getString(R.string.yes))){
+            useFirebase = true;
+        }else{
+            useFirebase = false;
+        }
 
         alarms = new ArrayList<>();
         listView = (ListView) findViewById(R.id.listView_alarms);

@@ -67,6 +67,36 @@
                 android:layout_toEndOf="@id/tv3" />
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cloud:"
+                />
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/tv4"
+                android:layout_marginStart="5sp">
+                <RadioButton
+                    android:id="@+id/rbFirebase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Firebase"
+                    android:checked="true"/>
+                <RadioButton
+                    android:id="@+id/rbHeroku"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Heroku"/>
+            </RadioGroup>
+        </RelativeLayout>
+
     </LinearLayout>
 
     <Button

@@ -94,6 +94,7 @@
     <string name="onlyWifi" translatable="false">onlyWifi</string>
     <string name="no" translatable="false">no</string>
     <string name="useTraffic" translatable="false">useTraffic</string>
+    <string name="useFirebase" translatable="false">useFirebase</string>
     <string name="marker" translatable="false">Marker</string>
     <string name="location_notfound2">The pressed location not found, try another</string>
     <string name="LogRefreshToken">Refreshed token:</string>
