@@ -75,7 +75,7 @@
                 android:id="@+id/tv4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cloud:"
+                android:text="@string/cloud_text"
                 />
 
             <RadioGroup
@@ -87,13 +87,13 @@
                     android:id="@+id/rbFirebase"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Firebase"
+                    android:text="@string/firebase_text"
                     android:checked="true"/>
                 <RadioButton
                     android:id="@+id/rbHeroku"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Heroku"/>
+                    android:text="@string/heroku_text"/>
             </RadioGroup>
         </RelativeLayout>
 
