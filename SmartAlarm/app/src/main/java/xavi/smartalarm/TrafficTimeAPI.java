@@ -79,9 +79,12 @@ public class TrafficTimeAPI extends AsyncTask<String, Void, String> {
                 String time = jsonResult.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("duration")
                         .getString("text");
 
-                StringTokenizer token = new StringTokenizer(time,"hours ");
-                int h = Integer.parseInt(token.nextToken());
-//                int m = Integer.parseInt(token.nextToken());
+                int h=0;
+                if(time.contains("hours")){
+                    StringTokenizer token = new StringTokenizer(time,"hours ");
+                    h = Integer.parseInt(token.nextToken());
+                }
+
 
                 if(h<=1){
                     editAlarm(5);
