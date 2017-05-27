@@ -7,7 +7,7 @@
         android:id="@+id/pauseButton"
         android:title="@string/add_alarm"
         android:icon="@android:drawable/ic_media_pause"
-        android:visible="false"
+        android:visible="true"
         app:showAsAction="always"/>
     <item
         android:id="@+id/addButton"

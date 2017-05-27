@@ -564,7 +564,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             case R.id.pauseButton:
                 intent.putExtra(getString(R.string.info),getString(R.string.stop));
                 sendBroadcast(intent);
-                if(i2!=null)i2.setVisible(false);
+               // if(i2!=null)i2.setVisible(false);  // pause false
                 break;
             case android.R.id.home:
                 drawer.openDrawer(GravityCompat.START);
@@ -595,7 +595,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
             manager.set(AlarmManager.RTC_WAKEUP, alarm.getDate().getTimeInMillis(), pendingIntent);       //sounds when the alarm is configured
 
-            if(i2!=null)i2.setVisible(true);
+          //  if(i2!=null)i2.setVisible(true);   //pause true
 
         }
     }
