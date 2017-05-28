@@ -632,7 +632,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         // Read from the database
         myRef.addValueEventListener(this);
 
-        adapterAlarm.notifyDataSetChanged(); //Notify that the listview has changes
+        adapterAlarm.notifyDataSetChanged(); //Notify that the arraylist has changes
 
         if (!preferences.getString(getString(R.string.useFirebase), getString(R.string.yes)).equals(getString(R.string.yes))) {
             //put alarm on heroku
