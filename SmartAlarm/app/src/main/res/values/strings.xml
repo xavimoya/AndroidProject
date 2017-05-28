@@ -112,7 +112,7 @@
     <string name="heroku_text">Use Heroku too</string>
     <string name="GETherokuAppURL" translatable="false">https://smart-alarm-2017.herokuapp.com/todos</string>
     <string name="POSTherokuAppURL" translatable="false"><![CDATA[https://smart-alarm-2017.herokuapp.com/todos/?user=%1$s&alarmCounter=%2$d]]></string>
-
+    <string name="exit_msg">Do you want to exit the app?</string>
 
 
 </resources>
