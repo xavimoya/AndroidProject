@@ -48,7 +48,7 @@
 
         <receiver android:name=".AlarmNotification" />
 
-        <service android:enabled="true" android:name=".alarmService"/>
+        <service android:enabled="true" android:name=".AlarmService"/>
 
         <service
                     android:name=".MyFirebaseMessagingService">

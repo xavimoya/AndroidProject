@@ -13,7 +13,7 @@ public class AlarmNotification extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent i = new Intent(context, alarmService.class);
+        Intent i = new Intent(context, AlarmService.class);
         String str = intent.getExtras().getString(context.getString(R.string.info));
         if(str != null) {
             if (str.equals(context.getString(R.string.sound))) {

@@ -18,7 +18,7 @@ import java.util.StringTokenizer;
  * Created by Xavi on 9/5/17.
  */
 
-public class TrafficTimeAPI extends AsyncTask<String, Void, String> {
+class TrafficTimeAPI extends AsyncTask<String, Void, String> {
     private final MainActivity MainActivity;
     private  Alarm alarm;
 

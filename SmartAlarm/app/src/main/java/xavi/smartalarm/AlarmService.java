@@ -10,7 +10,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
-public class alarmService extends Service {
+public class AlarmService extends Service {
 
 	private MediaPlayer player;
     private String textAlarm;
