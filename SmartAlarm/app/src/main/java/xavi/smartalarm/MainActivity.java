@@ -143,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
         //get drawer layout
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -731,6 +730,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         alarmRef.removeValue();
         alarms.clear();
         adapterAlarm.notifyDataSetChanged(); //Notify changes
+        if (!preferences.getString(getString(R.string.useFirebase), getString(R.string.yes)).equals(getString(R.string.yes))) {
+            //put alarm on heroku
+            deleteAllHerokuAlarm();
+            Toast.makeText(getApplicationContext(), R.string.allDelete2,Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getApplicationContext(), R.string.allDelete,Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -817,5 +823,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         requestQueue.add(request);
     }
 
+    private void deleteAllHerokuAlarm(){
+        RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
+        String uri = getString(R.string.GETherokuAppURL);
+        JsonObjectRequest request = new JsonObjectRequest(JsonRequest.Method.DELETE, uri, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, response.toString());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, error.toString());
+                    }
+                });
+        requestQueue.add(request);
+    }
 
 }
