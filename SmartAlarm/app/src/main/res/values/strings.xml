@@ -36,7 +36,7 @@
     <string name="urlAPIweather" translatable="false"><![CDATA[http://samples.openweathermap.org/data/2.5/forecast?lat=%2$f&lon=%2$f&appid=]]></string>
     <!-- api key google maps distance matrix -->
     <string name="urlAPItraffic" translatable="false">https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&amp;origins=%1$s&amp;destinations=%2$s&amp;mode=%3$s&amp;key=</string>
-    <string name="GoogleDistanceMatrixAPI">AIzaSyC_-R48BiDpqlqIxhtcNOrflacd87Mn4L8</string>
+    <string name="GoogleDistanceMatrixAPI" translatable="false">AIzaSyC_-R48BiDpqlqIxhtcNOrflacd87Mn4L8</string>
 
     <!-- Id Google token -->
     <string name="idTokenGoogle" translatable="false">485221616875-dpruhv4qgev2rnjjihfr3kojsa1fe9hu.apps.googleusercontent.com</string>
@@ -86,18 +86,18 @@
     <string name="User_Untranslatable" translatable="false">User_</string>
     <string name="ToastMoreNecessaryData">You don\'t choose all necessary data</string>
     <string name="ToastBadCharacter">Title cannot contains \'_\' character</string>
-    <string name="StreetUntranslatable">Street</string>
+    <string name="StreetUntranslatable" translatable="false">Street</string>
     <string name="ToastStopAlarm">Alarm Stopped</string>
     <string name="alarmActivated">Alarm activated</string>
     <string name="information">Information</string>
-    <string name="ToastServiceNoIdent">Servicio no identificado</string>
+    <string name="ToastServiceNoIdent">Service not identified</string>
     <string name="onlyWifi" translatable="false">onlyWifi</string>
     <string name="no" translatable="false">no</string>
     <string name="useTraffic" translatable="false">useTraffic</string>
     <string name="useFirebase" translatable="false">useFirebase</string>
     <string name="marker" translatable="false">Marker</string>
     <string name="location_notfound2">The pressed location not found, try another</string>
-    <string name="LogRefreshToken">Refreshed token:</string>
+    <string name="LogRefreshToken" translatable="false">Refreshed token:</string>
     <string name="LogNotificationReceived">NOTIFICATION RECEIVED \n Title: %1$s \n Text: %2$s</string>
     <string name="save_locationbtn">Save Location</string>
     <string name="btn_enter_your_destiny">Enter your destiny</string>
@@ -107,7 +107,7 @@
     <string name="DATE" translatable="false">DATE</string>
     <string name="LOCATION" translatable="false">LOCATION</string>
     <string name="ToastAlarmNoTraffic">Traffic not change the alarm because the state is %1$s</string>
-    <string name="cloud_text">Cloud:</string>
+    <string name="cloud_text" translatable="false">Cloud:</string>
     <string name="firebase_text">Only Firebase</string>
     <string name="heroku_text">Use Heroku too</string>
     <string name="GETherokuAppURL" translatable="false">https://smart-alarm-2017.herokuapp.com/data</string>
