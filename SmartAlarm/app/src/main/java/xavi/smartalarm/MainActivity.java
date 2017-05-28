@@ -1,6 +1,5 @@
 package xavi.smartalarm;
 
-import android.*;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -33,6 +32,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -44,7 +50,6 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -58,6 +63,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.android.volley.Request;
+
+import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -94,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private Intent intent;
-    private boolean useFirebase = true;
 
     private FirebaseAuth mAuth;
 
@@ -111,12 +118,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu24);
 
         preferences = getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE);
-
-        if(preferences.getString(getString(R.string.useFirebase), getString(R.string.yes)).equals(getString(R.string.yes))){
-            useFirebase = true;
-        }else{
-            useFirebase = false;
-        }
 
         alarms = new ArrayList<>();
         listView = (ListView) findViewById(R.id.listView_alarms);
@@ -627,6 +628,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         myRef.addValueEventListener(this);
 
         adapterAlarm.notifyDataSetChanged(); //Notify that the listview has changes
+
+        if(! preferences.getString(getString(R.string.useFirebase), getString(R.string.yes)).equals(getString(R.string.yes))){
+        //put alarm on heroku
+            postHerokuAlarm(name.getText().toString(), alarms.size());
+        }
     }
 
     private void restoreAlarmsOfDatabase() {
@@ -738,6 +744,47 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void setAlarm(Alarm alarm){
 
+    }
+
+    private void getHerokuAlarms() {
+        //GET method to obtain the users
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = getString(R.string.GETherokuAppURL);
+
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //
+
+                        Log.d(TAG, response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Read error");
+            }
+        });
+        queue.add(request);
+    }
+
+    private void postHerokuAlarm(String user, int alarmCounter) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
+        String uri = String.format(getString(R.string.POSTherokuAppURL), user, alarmCounter);
+        JsonObjectRequest request = new JsonObjectRequest(JsonRequest.Method.POST, uri, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, response.toString());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, error.toString());
+                    }
+                });
+        requestQueue.add(request);
     }
 
 
