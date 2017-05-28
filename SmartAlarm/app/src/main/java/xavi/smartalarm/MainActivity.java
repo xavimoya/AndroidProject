@@ -780,6 +780,29 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void setAlarm(Alarm alarm) {
 
+        //set alarm of database
+        DatabaseReference username = myRef.child(getString(R.string.UserName));
+        DatabaseReference alarmRef = username.child(getString(R.string.Alarm_Untranslatable)+alarm.getHashCode());
+        DatabaseReference title = alarmRef.child(getString(R.string.titleUntranslatable));
+        title.setValue(alarm.getTitle());
+        DatabaseReference date = alarmRef.child(getString(R.string.dateUntranslatable));
+        date.setValue(alarm.getDate().getTime());
+        //date.setValue(alarm.getDate().getTime().toString());
+        DatabaseReference destiny = alarmRef.child(getString(R.string.destinyUntranslatable));
+        destiny.setValue(alarm.getDestiny());
+
+        // Read from the database
+        myRef.addValueEventListener(this);
+
+        adapterAlarm.notifyDataSetChanged(); //Notify that the arraylist has changes
+
+        if (!preferences.getString(getString(R.string.useFirebase), getString(R.string.yes)).equals(getString(R.string.yes))) {
+            //put alarm on heroku
+            postHerokuAlarm(name.getText().toString(), alarms.size());
+        }
+
+
+
     }
 
     private void getHerokuAlarms() {
@@ -825,7 +848,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void deleteAllHerokuAlarm(){
         RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
-        String uri = getString(R.string.GETherokuAppURL);
+        String uri = getString(R.string.removeALLherokuAppURL);
         JsonObjectRequest request = new JsonObjectRequest(JsonRequest.Method.DELETE, uri, null,
                 new Response.Listener<JSONObject>() {
                     @Override
