@@ -108,10 +108,10 @@
     <string name="LOCATION" translatable="false">LOCATION</string>
     <string name="ToastAlarmNoTraffic">Traffic not change the alarm because the state is %1$s</string>
     <string name="cloud_text">Cloud:</string>
-    <string name="firebase_text">Firebase</string>
-    <string name="heroku_text">Heroku</string>
-    <string name="GETherokuAppURL">https://smart-alarm-2017.herokuapp.com/todos</string>
-    <string name="POSTherokuAppURL"><![CDATA[https://smart-alarm-2017.herokuapp.com/todos/?user=%1$s&alarmCounter=%2$d]]></string>
+    <string name="firebase_text">Only Firebase</string>
+    <string name="heroku_text">Use Heroku too</string>
+    <string name="GETherokuAppURL" translatable="false">https://smart-alarm-2017.herokuapp.com/todos</string>
+    <string name="POSTherokuAppURL" translatable="false"><![CDATA[https://smart-alarm-2017.herokuapp.com/todos/?user=%1$s&alarmCounter=%2$d]]></string>
 
 
 

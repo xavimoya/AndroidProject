@@ -7,10 +7,7 @@
             android:id="@+id/nav_Newalarm"
             android:icon="@android:drawable/ic_popup_reminder"
             android:title="New alarm" />
-        <item
-            android:id="@+id/nav_Editalarm"
-            android:icon="@android:drawable/ic_popup_reminder"
-            android:title="Edit alarms" />
+
         <item
             android:id="@+id/deleteAlarms"
             android:icon="@android:drawable/ic_delete"

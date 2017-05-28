@@ -117,8 +117,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu24);
 
+        //get preferences
         preferences = getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE);
 
+        //create list of alarms
         alarms = new ArrayList<>();
         listView = (ListView) findViewById(R.id.listView_alarms);
         adapterAlarm = new CustomAlarmAdapter(this, alarms);
@@ -140,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
+        //get drawer layout
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -197,9 +200,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         };
 
+        //get firebase db
         database = FirebaseDatabase.getInstance();
 
 
+        //initialize intent of alarm notifications
         intent = new Intent(MainActivity.this, AlarmNotification.class);
 
 
@@ -290,6 +295,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
 
+    //when other activity returns a result code, performs it in this method
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -299,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
-        //Result returned of create alarm
+        //Result returned of create alarm activity
         else if (requestCode == resultCode && resultCode == RESULT_ADDALARM) {
             //Result of AddAlarm
             //data is the new alarm configured
@@ -316,17 +322,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
             Alarm alarm = new Alarm(date, data.getExtras().getString(getString(R.string.title)), data.getExtras().getString(getString(R.string.location)));
 
-            //not add yet
-            // alarms.add(alarm);
 
-            //Task to check weather
+            //Task to check weather and traffic
             if (preferences.getString(getString(R.string.useWeather), getString(R.string.yes)).equals(getString(R.string.yes)) &&
                     preferences.getString(getString(R.string.useTraffic), getString(R.string.yes)).equals(getString(R.string.yes))) {
 
 
                 createAlarm(alarm);
 
-            } else if (preferences.getString(getString(R.string.useWeather), getString(R.string.yes)).equals(getString(R.string.yes))) {
+            } else if (preferences.getString(getString(R.string.useWeather), getString(R.string.yes)).equals(getString(R.string.yes))) {  //only use weather
 
                 WeatherPrevisionAPI wpa = new WeatherPrevisionAPI(this, alarm);
 
@@ -335,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 String url = String.format(getResources().getString(R.string.urlAPIweather), latitude, longitude);
                 wpa.execute(url + getString(R.string.weatherAPIkey)); //URL of api + location selected
 
-            } else if (preferences.getString(getString(R.string.useTraffic), getString(R.string.yes)).equals(getString(R.string.yes))) {
+            } else if (preferences.getString(getString(R.string.useTraffic), getString(R.string.yes)).equals(getString(R.string.yes))) {  //only use traffic
                 //Get latitude and longitude of destiny
                 Double destLatitude = data.getExtras().getDouble(getString(R.string.latitude));
                 Double destLongitude = data.getExtras().getDouble(getString(R.string.longitude));
@@ -345,30 +349,32 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 LocationManager mLocationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
                 boolean isGPSEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                 if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},1);
+                    ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                 }
+
                 Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                if (location == null) location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (location == null) location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (location == null)
+                    location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (location == null)
+                    location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
 
-                String origin= location.getLatitude()+","+location.getLongitude();
+                String origin = location.getLatitude() + "," + location.getLongitude();
 
                 //Makes url to get JSON from Google API (distance matrix api)
                 String mode = "driving";    //by default
-                String url = String.format(getResources().getString(R.string.urlAPItraffic),origin,dest,mode);
+                String url = String.format(getResources().getString(R.string.urlAPItraffic), origin, dest, mode);
                 String key = getString(R.string.GoogleDistanceMatrixAPI);
 
-                TrafficTimeAPI tta = new TrafficTimeAPI(this,alarm);
-                tta.execute(url+key);
+                TrafficTimeAPI tta = new TrafficTimeAPI(this, alarm);
+                tta.execute(url + key);
 
-            }else{
+            } else {
                 //Create the alarm regardless of preferences (because all is deactivated)
                 createAlarm(alarm);
             }
 
 
-            //Tendriamos que usar el switch
             //Makes alarms sound
             startAlarm(true, alarm); //Valor del switch
 
@@ -394,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                                 Log.w(TAG, getString(R.string.LogSignInCredentials), task.getException());
                                 Toast.makeText(MainActivity.this, R.string.ToastAuthFail,
                                         Toast.LENGTH_SHORT).show();
-                            }else{
+                            } else {
                                 FirebaseMessaging.getInstance().subscribeToTopic(getString(R.string.topicNews));
 
                             }
@@ -422,19 +428,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     /**
      * This method is called when the user is signed in or sign out
-     *
-     * Start the next activity.
+     * <p>
+     * Change the view of activity
      */
 
     private void updateUI(boolean signedIn) {
-        MenuItem item =  menu.findItem(R.id.nav_signout);
+        MenuItem item = menu.findItem(R.id.nav_signout);
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.sign_out_layout).setVisibility(View.VISIBLE);
             item.setTitle(getString(R.string.sign_out));
             item.setIcon(android.R.drawable.ic_menu_revert);
-            menu.setGroupVisible(R.id.groupAlarmMenu,true);
-            if(i!=null)i.setVisible(true);
+            menu.setGroupVisible(R.id.groupAlarmMenu, true);
+            if (i != null) i.setVisible(true);
 
         } else { // signed out
 
@@ -445,8 +451,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             name.setText(R.string.name_notSigned);
             email.setText("");
             imageView.setImageDrawable(imageD);
-            menu.setGroupVisible(R.id.groupAlarmMenu,false);
-            if(i!=null)i.setVisible(false);
+            menu.setGroupVisible(R.id.groupAlarmMenu, false);
+            if (i != null) i.setVisible(false);
 
         }
     }
@@ -473,15 +479,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         if (id == R.id.nav_Newalarm) {
             newAlarm();
-        } else if(id == R.id.nav_Editalarm){
 
         } else if (id == R.id.nav_signout) {
-            if(item.getTitle() == getString(R.string.sign_out)) signOut();
-            else if(item.getTitle() == getString(R.string.sign_in)) signIn();
+            if (item.getTitle() == getString(R.string.sign_out)) signOut();
+            else if (item.getTitle() == getString(R.string.sign_in)) signIn();
         } else if (id == R.id.nav_manage) {
             startActivity(new Intent(getApplicationContext(), ConfigurationActivity.class));
 
-        }else if(id == R.id.deleteAlarms){
+        } else if (id == R.id.deleteAlarms) {
             removeAlarmsOfDatabase();
         }
 
@@ -490,15 +495,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
 
-
     //Database Methods
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
 
         // This method is called once with the initial value and again
         // whenever data at this location is updated.
-       // String value = dataSnapshot.getValue(String.class);
-       // Log.d(TAG, "Value is: " + value);
+        // String value = dataSnapshot.getValue(String.class);
+        // Log.d(TAG, "Value is: " + value);
     }
 
     @Override
@@ -563,9 +567,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 newAlarm();
                 break;
             case R.id.pauseButton:
-                intent.putExtra(getString(R.string.info),getString(R.string.stop));
+                intent.putExtra(getString(R.string.info), getString(R.string.stop));
                 sendBroadcast(intent);
-               // if(i2!=null)i2.setVisible(false);  // pause false
+                // if(i2!=null)i2.setVisible(false);  // pause false
                 break;
             case android.R.id.home:
                 drawer.openDrawer(GravityCompat.START);
@@ -575,35 +579,35 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void newAlarm() {
+        //start activity to create a new alarm
         Intent intentTime = new Intent(MainActivity.this, AddAlarm.class);
-        startActivityForResult(intentTime,RESULT_ADDALARM);
+        startActivityForResult(intentTime, RESULT_ADDALARM);
     }
 
     private void startAlarm(boolean state, Alarm alarm) {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-       // Intent intent;
+        // Intent intent;
         PendingIntent pendingIntent;
 
         //Represents the switch is true, this indicates that the alarm is activated
         if (state) { //true
-           // intent = new Intent(MainActivity.this, AlarmNotification.class);
-            intent.putExtra(getString(R.string.info),getString(R.string.sound));
-            intent.putExtra(getString(R.string.text),alarm.getTitle());
+            // intent = new Intent(MainActivity.this, AlarmNotification.class);
+            intent.putExtra(getString(R.string.info), getString(R.string.sound));
+            intent.putExtra(getString(R.string.text), alarm.getTitle());
             pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
 
 
-//            manager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);  //sounds now
+            //manager.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(), pendingIntent);  //sounds now
 
             manager.set(AlarmManager.RTC_WAKEUP, alarm.getDate().getTimeInMillis(), pendingIntent);       //sounds when the alarm is configured
 
-          //  if(i2!=null)i2.setVisible(true);   //pause true
+            //  if(i2!=null)i2.setVisible(true);   //pause true
 
         }
     }
 
 
-
-    public void createAlarm(Alarm alarm){
+    public void createAlarm(Alarm alarm) {
 
         //Add alarm after check weather prevision
         alarms.add(alarm);
@@ -615,7 +619,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         username.setValue(name.getText());
         DatabaseReference counter = myRef.child(getString(R.string.AlarmsCounterUntranslatable));
         counter.setValue(alarms.size());
-        DatabaseReference alarmRef = myRef.child(getString(R.string.Alarm_Untranslatable)+  alarm.getHashCode());
+        DatabaseReference alarmRef = myRef.child(getString(R.string.Alarm_Untranslatable) + alarm.getHashCode());
         DatabaseReference title = alarmRef.child(getString(R.string.titleUntranslatable));
         title.setValue(alarm.getTitle());
         DatabaseReference date = alarmRef.child(getString(R.string.dateUntranslatable));
@@ -629,8 +633,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         adapterAlarm.notifyDataSetChanged(); //Notify that the listview has changes
 
-        if(! preferences.getString(getString(R.string.useFirebase), getString(R.string.yes)).equals(getString(R.string.yes))){
-        //put alarm on heroku
+        if (!preferences.getString(getString(R.string.useFirebase), getString(R.string.yes)).equals(getString(R.string.yes))) {
+            //put alarm on heroku
             postHerokuAlarm(name.getText().toString(), alarms.size());
         }
     }
@@ -638,32 +642,32 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void restoreAlarmsOfDatabase() {
         //Get alarms from database
 
-       // DatabaseReference alarmRef = database.getReference("User_" + userID);
+        // DatabaseReference alarmRef = database.getReference("User_" + userID);
         myRef = database.getReference(getString(R.string.User_Untranslatable) + userID);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (final DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                    if(snapshot.getKey().contains(getString(R.string.Alarm_Untranslatable))){
+                    if (snapshot.getKey().contains(getString(R.string.Alarm_Untranslatable))) {
                         String name = snapshot.getKey();
                         name = name.substring(6);
                         boolean validAlarm = true;
-                        for (Alarm a : alarms){
-                            if (a.getHashCode() == Integer.parseInt(name)){
+                        for (Alarm a : alarms) {
+                            if (a.getHashCode() == Integer.parseInt(name)) {
                                 validAlarm = false;
                             }
                         }
-                        if(validAlarm){
+                        if (validAlarm) {
                             myRef.child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     Calendar cal = Calendar.getInstance();
-                                    String title="";
+                                    String title = "";
                                     String dest = "";
 
-                                    for (DataSnapshot snapshot1 : dataSnapshot.getChildren()){
-                                        switch (snapshot1.getKey()){
+                                    for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
+                                        switch (snapshot1.getKey()) {
                                             case "Date":
                                                 cal.setTime(snapshot1.getValue(Date.class));
                                                 break;
@@ -675,10 +679,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                                                 break;
                                         }
                                     }
-                                    Alarm a = new Alarm(cal,title,dest);
+                                    Alarm a = new Alarm(cal, title, dest);
                                     a.setHashcode(Integer.parseInt(snapshot.getKey().substring(6)));
-                                   // if (!alarms.contains(a)){
-                                    if (alarmNotInAlarms(a)){
+                                    // if (!alarms.contains(a)){
+                                    if (alarmNotInAlarms(a)) {
                                         alarms.add(a);
                                         adapterAlarm.notifyDataSetChanged();
                                     }
@@ -711,7 +715,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private boolean alarmNotInAlarms(Alarm a) {
-        for(Alarm alarm : alarms){
+        for (Alarm alarm : alarms) {
             if (alarm.getHashCode() == a.getHashCode()) return false;
 
         }
@@ -719,7 +723,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
 
-    private void removeAlarmsOfDatabase(){
+    private void removeAlarmsOfDatabase() {
         //For all references
         DatabaseReference alarmRef = database.getReference(getString(R.string.User_Untranslatable) + userID);
         alarmRef.removeValue();
@@ -731,7 +735,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
-        state.putString("USER",userID);
+        state.putString("USER", userID);
 
     }
 
@@ -742,7 +746,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         restoreAlarmsOfDatabase();
     }
 
-    private void setAlarm(Alarm alarm){
+    private void setAlarm(Alarm alarm) {
 
     }
 
