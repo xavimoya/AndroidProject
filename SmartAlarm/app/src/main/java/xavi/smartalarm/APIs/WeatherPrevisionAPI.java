@@ -1,4 +1,4 @@
-package xavi.smartalarm;
+package xavi.smartalarm.APIs;
 
 /*
  * Created by Xavi on 23/3/17.
@@ -18,17 +18,21 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import xavi.smartalarm.Activities.MainActivity;
+import xavi.smartalarm.Object.Alarm;
+import xavi.smartalarm.R;
 
-class WeatherPrevisionAPI extends AsyncTask<String, Void, String> {
-    private final MainActivity MainActivity;
-    private  Alarm alarm;
+
+public class WeatherPrevisionAPI extends AsyncTask<String, Void, String> {
+    private final xavi.smartalarm.Activities.MainActivity MainActivity;
+    private Alarm alarm;
 
     // this constructor takes the activity as the parameter.
     // that way we can use the activity later to populate the weather value fields
     // on the screen
 
 
-    WeatherPrevisionAPI(MainActivity MainActivity, Alarm alarm) {
+    public WeatherPrevisionAPI(MainActivity MainActivity, Alarm alarm) {
         this.MainActivity = MainActivity;
         this.alarm = alarm;
     }

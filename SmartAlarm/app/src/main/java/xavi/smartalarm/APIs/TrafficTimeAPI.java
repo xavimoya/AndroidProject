@@ -1,4 +1,4 @@
-package xavi.smartalarm;
+package xavi.smartalarm.APIs;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -14,17 +14,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+import xavi.smartalarm.Activities.MainActivity;
+import xavi.smartalarm.Object.Alarm;
+import xavi.smartalarm.R;
+
 /**
  * Created by Xavi on 9/5/17.
  */
 
-class TrafficTimeAPI extends AsyncTask<String, Void, String> {
-    private final MainActivity MainActivity;
-    private  Alarm alarm;
+public class TrafficTimeAPI extends AsyncTask<String, Void, String> {
+    private final xavi.smartalarm.Activities.MainActivity MainActivity;
+    private Alarm alarm;
 
 
 
-    TrafficTimeAPI(MainActivity MainActivity, Alarm alarm) {
+    public TrafficTimeAPI(MainActivity MainActivity, Alarm alarm) {
         this.MainActivity = MainActivity;
         this.alarm = alarm;
     }

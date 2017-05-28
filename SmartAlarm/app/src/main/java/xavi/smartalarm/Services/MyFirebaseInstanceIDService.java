@@ -1,4 +1,4 @@
-package xavi.smartalarm;
+package xavi.smartalarm.Services;
 
 /*
  * Created by Xavi on 23/4/17.
@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+
+import xavi.smartalarm.R;
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 

@@ -1,4 +1,4 @@
-package xavi.smartalarm;
+package xavi.smartalarm.Fragment;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -8,6 +8,8 @@ import android.support.v4.app.DialogFragment;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
+
+import xavi.smartalarm.Activities.AddAlarm;
 
 /*
  * Created by Xavi on 23/4/17.

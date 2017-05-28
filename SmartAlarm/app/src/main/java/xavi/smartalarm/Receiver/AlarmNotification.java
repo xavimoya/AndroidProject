@@ -1,8 +1,11 @@
-package xavi.smartalarm;
+package xavi.smartalarm.Receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import xavi.smartalarm.R;
+import xavi.smartalarm.Services.AlarmService;
 
 /**
  * Created by Xavi and Reylin on 22/03/2017.

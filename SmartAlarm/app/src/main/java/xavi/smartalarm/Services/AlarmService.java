@@ -1,4 +1,4 @@
-package xavi.smartalarm;
+package xavi.smartalarm.Services;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -9,6 +9,8 @@ import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
+
+import xavi.smartalarm.R;
 
 public class AlarmService extends Service {
 

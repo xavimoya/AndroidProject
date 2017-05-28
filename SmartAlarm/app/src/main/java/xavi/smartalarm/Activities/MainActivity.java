@@ -1,4 +1,4 @@
-package xavi.smartalarm;
+package xavi.smartalarm.Activities;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -75,6 +75,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import xavi.smartalarm.Adapter.CustomAlarmAdapter;
+import xavi.smartalarm.Receiver.AlarmNotification;
+import xavi.smartalarm.Object.Alarm;
+import xavi.smartalarm.R;
+import xavi.smartalarm.APIs.TrafficTimeAPI;
+import xavi.smartalarm.APIs.WeatherPrevisionAPI;
 
 /*
  * Created by Xavi and Reylin on 4/3/17.

@@ -1,4 +1,4 @@
-package xavi.smartalarm;
+package xavi.smartalarm.Activities;
 
 /*
  * Created by Xavi on 22/3/17.
@@ -26,6 +26,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
+
+import xavi.smartalarm.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 

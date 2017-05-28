@@ -1,4 +1,4 @@
-package xavi.smartalarm;
+package xavi.smartalarm.Activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.Switch;
+
+import xavi.smartalarm.R;
 
 /*
  * Created by Xavi on 21/4/17.

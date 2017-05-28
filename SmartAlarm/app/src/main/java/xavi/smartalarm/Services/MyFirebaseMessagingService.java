@@ -1,4 +1,4 @@
-package xavi.smartalarm;
+package xavi.smartalarm.Services;
 
 /*
  * Created by Xavi on 23/4/17.
@@ -11,6 +11,8 @@ import android.util.Log;
 import android.support.v4.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import xavi.smartalarm.R;
 
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
