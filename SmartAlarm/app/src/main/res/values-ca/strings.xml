@@ -46,4 +46,6 @@
     <string name="saveBtn">Guardar</string>
     <string name="save_locationbtn">Guardar localització</string>
     <string name="set_your_location">Estableix la teva localització</string>
+    <string name="yes">si</string>
+    <string name="dd_mm_yyyy">DD/MM/AAAA</string>
 </resources>

@@ -46,4 +46,6 @@
     <string name="save_locationbtn">Guardar localización</string>
     <string name="problemsSaveLocation">Hay problemas para guardar la localización.</string>
     <string name="set_your_location">Establezca su localización</string>
+    <string name="yes">si</string>
+    <string name="dd_mm_yyyy">DD/MM/AAAA</string>
 </resources>

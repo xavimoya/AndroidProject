@@ -8,10 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import xavi.smartalarm.Activities.MainActivity;
 import xavi.smartalarm.Object.Alarm;
 import xavi.smartalarm.R;
 
@@ -30,7 +32,7 @@ public class CustomAlarmAdapter extends ArrayAdapter<Alarm>{
         LayoutInflater alarmsInflater = LayoutInflater.from(getContext());
         View customView = alarmsInflater.inflate(R.layout.custome_row, parent, false);
 
-        Alarm alarm = getItem(position);
+        final Alarm alarm = getItem(position);
         TextView alarmTextView = (TextView) customView.findViewById(R.id.text_title);
         TextView time = (TextView) customView.findViewById(R.id.text_time);
         TextView date = (TextView) customView.findViewById(R.id.text_date);
@@ -54,7 +56,15 @@ public class CustomAlarmAdapter extends ArrayAdapter<Alarm>{
         date.setText(alarm.getDate().get(Calendar.DAY_OF_MONTH) +"/" + (alarm.getDate().get(Calendar.MONTH)+1) + "/" + alarm.getDate().get(Calendar.YEAR));
         location.setText(alarm.getDestiny());
 
+        customView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getContext(),"You press the alarm " + alarm.getTitle(), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
 
         return customView;
     }
+
 }

@@ -24,7 +24,7 @@
     <string name="label_description">Description</string>
     <string name="label_location">Location</string>
     <string name="button_date">Date</string>
-    <string name="dd_mm_yyyy" translatable="false">DD/MM/YYYY</string>
+    <string name="dd_mm_yyyy">DD/MM/YYYY</string>
     <string name="hh_mm" translatable="false">HH:MM</string>
     <string name="set_your_location">Set your location</string>
     <string name="error_location">Permission revoked. Cannot access to location.</string>
@@ -60,7 +60,7 @@
     <string name="title" translatable="false">Title</string>
     <string name="location" translatable="false">Location</string>
     <string name="useWeather" translatable="false">useWeather</string>
-    <string name="yes" translatable="false">yes</string>
+    <string name="yes">yes</string>
     <string name="latitude" translatable="false">Latitude</string>
     <string name="longitude" translatable="false">Longitude</string>
     <string name="street" translatable="false">Street</string>
