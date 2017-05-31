@@ -121,6 +121,7 @@
     <string name="preferenceTitle1">Data Usage</string>
     <string name="preferenceTitle2">APIs Options</string>
     <string name="preferenceTitle3">Cloud Options</string>
+    <string name="toastAPIs">If you can use APIs with mobile network active the preferences option</string>
 
 
 </resources>

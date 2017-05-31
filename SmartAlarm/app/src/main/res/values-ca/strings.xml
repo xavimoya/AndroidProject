@@ -53,4 +53,5 @@
     <string name="preferenceTitle3">Opcions del núvol</string>
     <string name="preferenceTitle2">Opcions de les APIs</string>
     <string name="preferenceTitle1">Ús de dades</string>
+    <string name="toastAPIs">Si vols utilitzar les APIs amb la xarxa mòbil activa l\'opció a les preferències</string>
 </resources>

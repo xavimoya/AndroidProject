@@ -13,6 +13,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.Preference;
 import android.support.annotation.NonNull;
@@ -334,15 +336,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
             Alarm alarm = new Alarm(date, data.getExtras().getString(getString(R.string.title)), data.getExtras().getString(getString(R.string.location)));
 
+            Boolean canUseAPIs = true;  //If user can use APIs - At first the user can.
 
+            if (preferences.getBoolean(getString(R.string.onlyWifi), false)) {
+                //if only want use wifi I check if it is connected
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                boolean wifiConnected = networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
+                if (!wifiConnected) {
+                    canUseAPIs = false; //Cannot use APIs because the wifi is off
+                    if (preferences.getBoolean(getString(R.string.useWeather), false) ||
+                            preferences.getBoolean(getString(R.string.useTraffic), false)) {
+                        Toast.makeText(this, R.string.toastAPIs, Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
             //Task to check weather and traffic
             if (preferences.getBoolean(getString(R.string.useWeather), false) &&
-                    preferences.getBoolean(getString(R.string.useTraffic), false)) {
-
+                    preferences.getBoolean(getString(R.string.useTraffic), false) && canUseAPIs) {
 
                 createAlarm(alarm);
 
-            } else if (preferences.getBoolean(getString(R.string.useWeather), false)) {  //only use weather
+            } else if (preferences.getBoolean(getString(R.string.useWeather), false) && canUseAPIs) {  //only use weather
 
                 WeatherPrevisionAPI wpa = new WeatherPrevisionAPI(this, alarm);
 
@@ -351,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 String url = String.format(getResources().getString(R.string.urlAPIweather), latitude, longitude);
                 wpa.execute(url + getString(R.string.weatherAPIkey)); //URL of api + location selected
 
-            } else if (preferences.getBoolean(getString(R.string.useTraffic), false)) {  //only use traffic
+            } else if (preferences.getBoolean(getString(R.string.useTraffic), false) && canUseAPIs) {  //only use traffic
                 //Get latitude and longitude of destiny
                 Double destLatitude = data.getExtras().getDouble(getString(R.string.latitude));
                 Double destLongitude = data.getExtras().getDouble(getString(R.string.longitude));
@@ -359,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                 //Get latitude and longitude of origin
                 LocationManager mLocationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-              //  boolean isGPSEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                //  boolean isGPSEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                 if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                 }
@@ -741,12 +756,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         alarmRef.removeValue();
         alarms.clear();
         adapterAlarm.notifyDataSetChanged(); //Notify changes
-        if (!preferences.getBoolean(getString(R.string.useFirebase),false)) {
+        if (!preferences.getBoolean(getString(R.string.useFirebase), false)) {
             //put alarm on heroku
             deleteAllHerokuAlarm();
-            Toast.makeText(getApplicationContext(), R.string.allDelete2,Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(getApplicationContext(), R.string.allDelete,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.allDelete2, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.allDelete, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -793,7 +808,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         //set alarm of database
         DatabaseReference username = myRef.child(getString(R.string.UserName));
-        DatabaseReference alarmRef = username.child(getString(R.string.Alarm_Untranslatable)+alarm.getHashCode());
+        DatabaseReference alarmRef = username.child(getString(R.string.Alarm_Untranslatable) + alarm.getHashCode());
         DatabaseReference title = alarmRef.child(getString(R.string.titleUntranslatable));
         title.setValue(alarm.getTitle());
         DatabaseReference date = alarmRef.child(getString(R.string.dateUntranslatable));
@@ -811,7 +826,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             //put alarm on heroku
             postHerokuAlarm(name.getText().toString(), alarms.size());
         }
-
 
 
     }
@@ -857,7 +871,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         requestQueue.add(request);
     }
 
-    private void deleteAllHerokuAlarm(){
+    private void deleteAllHerokuAlarm() {
         RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
         String uri = getString(R.string.removeALLherokuAppURL);
         JsonObjectRequest request = new JsonObjectRequest(JsonRequest.Method.DELETE, uri, null,
