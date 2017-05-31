@@ -16,7 +16,7 @@
     <string name="label_location">Localización</string>
     <string name="label_description">Descripción</string>
     <string name="information">Información</string>
-    <string name="heroku_text">Usar también Heroku</string>
+    <string name="heroku_text">Usar Heroku</string>
     <string name="firebase_text">Solo Firebase</string>
     <string name="loading">Cargando</string>
     <string name="exitApp">Salir</string>
@@ -48,4 +48,9 @@
     <string name="set_your_location">Establezca su localización</string>
     <string name="yes">si</string>
     <string name="dd_mm_yyyy">DD/MM/AAAA</string>
+    <string name="summaryCloud">Utilizar Heroku como nube extra. Firebase lo hace todo.</string>
+    <string name="summaryAPIs">Las APIs del tiempo y trafico no funcionaran con la red móvil</string>
+    <string name="preferenceTitle3">Opciones de la nube</string>
+    <string name="preferenceTitle2">Opciones de las APIs</string>
+    <string name="preferenceTitle1">Uso de datos</string>
 </resources>

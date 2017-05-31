@@ -25,11 +25,7 @@ public class AlarmNotification extends BroadcastReceiver{
                 context.startService(i);
             } else if(str.equals(context.getString(R.string.stop))) {
                 context.stopService(i);
-            } else {
-
             }
-        }else{
-
         }
 
 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/preferenceTitle1">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/onlyWifi"
+            android:summary="@string/summaryAPIs"
+            android:title="@string/preference_update_wifi" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/preferenceTitle2">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/useWeather"
+            android:title="@string/preference_active_weather" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/useTraffic"
+            android:title="@string/preference_active_traffic" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/preferenceTitle3">
+        <CheckBoxPreference
+            android:key="@string/useFirebase"
+            android:title="@string/heroku_text"
+            android:summary="@string/summaryCloud"
+            android:defaultValue="false"
+            />
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

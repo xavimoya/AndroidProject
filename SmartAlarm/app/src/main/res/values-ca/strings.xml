@@ -17,7 +17,7 @@
     <string name="label_location">Localització</string>
     <string name="label_description">Descripció</string>
     <string name="information">Informació</string>
-    <string name="heroku_text">Utilitzar també Heroku</string>
+    <string name="heroku_text">Utilitzar Heroku</string>
     <string name="firebase_text">Únicament Firebase</string>
     <string name="loading">Carregant...</string>
     <string name="exitApp">Sortir</string>
@@ -48,4 +48,9 @@
     <string name="set_your_location">Estableix la teva localització</string>
     <string name="yes">si</string>
     <string name="dd_mm_yyyy">DD/MM/AAAA</string>
+    <string name="summaryCloud">Utilitzar Heroku com a núvol extra. Firebase ho fa tot.</string>
+    <string name="summaryAPIs">Les APIs del temps i transit no funcionaran amb la xarxa mòbil</string>
+    <string name="preferenceTitle3">Opcions del núvol</string>
+    <string name="preferenceTitle2">Opcions de les APIs</string>
+    <string name="preferenceTitle1">Ús de dades</string>
 </resources>

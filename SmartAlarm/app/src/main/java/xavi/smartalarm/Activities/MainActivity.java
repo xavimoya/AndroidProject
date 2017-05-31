@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -22,6 +23,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -77,6 +79,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import xavi.smartalarm.Adapter.CustomAlarmAdapter;
+import xavi.smartalarm.Fragment.ConfigurationFragment;
 import xavi.smartalarm.Receiver.AlarmNotification;
 import xavi.smartalarm.Object.Alarm;
 import xavi.smartalarm.R;
@@ -127,7 +130,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu24);
 
         //get preferences
-        preferences = getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE);
+        preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        //preferences = getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE);
 
         //create list of alarms
         alarms = new ArrayList<>();
@@ -332,13 +336,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 
             //Task to check weather and traffic
-            if (preferences.getString(getString(R.string.useWeather), getString(R.string.yes)).equals(getString(R.string.yes)) &&
-                    preferences.getString(getString(R.string.useTraffic), getString(R.string.yes)).equals(getString(R.string.yes))) {
+            if (preferences.getBoolean(getString(R.string.useWeather), false) &&
+                    preferences.getBoolean(getString(R.string.useTraffic), false)) {
 
 
                 createAlarm(alarm);
 
-            } else if (preferences.getString(getString(R.string.useWeather), getString(R.string.yes)).equals(getString(R.string.yes))) {  //only use weather
+            } else if (preferences.getBoolean(getString(R.string.useWeather), false)) {  //only use weather
 
                 WeatherPrevisionAPI wpa = new WeatherPrevisionAPI(this, alarm);
 
@@ -347,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 String url = String.format(getResources().getString(R.string.urlAPIweather), latitude, longitude);
                 wpa.execute(url + getString(R.string.weatherAPIkey)); //URL of api + location selected
 
-            } else if (preferences.getString(getString(R.string.useTraffic), getString(R.string.yes)).equals(getString(R.string.yes))) {  //only use traffic
+            } else if (preferences.getBoolean(getString(R.string.useTraffic), false)) {  //only use traffic
                 //Get latitude and longitude of destiny
                 Double destLatitude = data.getExtras().getDouble(getString(R.string.latitude));
                 Double destLongitude = data.getExtras().getDouble(getString(R.string.longitude));
@@ -355,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                 //Get latitude and longitude of origin
                 LocationManager mLocationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-                boolean isGPSEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+              //  boolean isGPSEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                 if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                 }
@@ -641,7 +645,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         adapterAlarm.notifyDataSetChanged(); //Notify that the arraylist has changes
 
-        if (!preferences.getString(getString(R.string.useFirebase), getString(R.string.yes)).equals(getString(R.string.yes))) {
+        if (!preferences.getBoolean(getString(R.string.useFirebase), false)) {
             //put alarm on heroku
             postHerokuAlarm(name.getText().toString(), alarms.size());
         }
@@ -737,7 +741,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         alarmRef.removeValue();
         alarms.clear();
         adapterAlarm.notifyDataSetChanged(); //Notify changes
-        if (!preferences.getString(getString(R.string.useFirebase), getString(R.string.yes)).equals(getString(R.string.yes))) {
+        if (!preferences.getBoolean(getString(R.string.useFirebase),false)) {
             //put alarm on heroku
             deleteAllHerokuAlarm();
             Toast.makeText(getApplicationContext(), R.string.allDelete2,Toast.LENGTH_SHORT).show();
@@ -803,7 +807,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         adapterAlarm.notifyDataSetChanged(); //Notify that the arraylist has changes
 
-        if (!preferences.getString(getString(R.string.useFirebase), getString(R.string.yes)).equals(getString(R.string.yes))) {
+        if (!preferences.getBoolean(getString(R.string.useFirebase), false)) {
             //put alarm on heroku
             postHerokuAlarm(name.getText().toString(), alarms.size());
         }

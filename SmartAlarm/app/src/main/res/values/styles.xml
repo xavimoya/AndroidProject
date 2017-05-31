@@ -6,12 +6,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
 
 
 <!-- Base application theme. -->
 <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <item name="preferenceTheme">@style/ThemeOverlay.MyDarkButton</item>
     <!-- Customize your theme here. -->
 </style>
 
@@ -19,6 +21,7 @@
 <style name="ThemeOverlay.MyNoTitleActivity" parent="AppTheme">
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>
+
 </style>
 
 <!-- Dark Buttons -->
@@ -39,9 +42,9 @@
         <style name="SmartAlarmTheme" parent="AppTheme" >
             <item name="colorPrimary">@color/colorGreen1</item>
             <item name="colorPrimaryDark">@color/colorGreen2</item>
+
         </style>
 
-        <style name="Theme.Material.Light.NoActionBar.NoActionBar" parent="android:Theme.Material.NoActionBar" />
 
 
 </resources>
