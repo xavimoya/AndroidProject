@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SmartAlarm</string>
-    <string name="LogNotificationReceived">NOTIFICACIÓ REBUDA [...]</string>
+    <string name="LogNotificationReceived">NOTIFICACIÓ REBUDA \n Títol: %1$s \n Text: %2$s</string>
     <string name="ToastAlarmMeteo">Per raons meteorologiques (%1$s) la alarma sonarà %2$d minuts més tard</string>
     <string name="ToastAlarmNoTraffic">El transit no modifica la alarma ja que l\'estat és %1$s</string>
     <string name="ToastAlarmTraffic">Per raons del transit l\'alarma sonara %1$d minuts abans</string>
